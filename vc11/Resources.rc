@@ -1,0 +1,4 @@
+#include "../include/Resources.h"
+
+RES_VERT_GLSL_FRESNEL		GLSL	"..\\shaders\\simpleFresnel_vert.glsl"
+RES_FRAG_GLSL_FRESNEL		GLSL	"..\\shaders\\simpleFresnel_frag.glsl"

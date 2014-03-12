@@ -134,7 +134,7 @@ void WaveModel::draw(){
 // Compute new elevation of each vertex
 void WaveModel::computePositions(float elapsedTime){
 	
-	float speed = 3.6f;
+	float speed = 3.8f;
 	elapsedTime = cos(elapsedTime * 0.01f * speed) * 30 + 35;
 	mFrameCounter++;
 

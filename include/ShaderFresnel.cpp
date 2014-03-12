@@ -6,16 +6,15 @@ ShaderFresnel::ShaderFresnel(){
 	mIdRessourceVertexShader = RES_VERT_GLSL_FRESNEL;
 	mIdRessourceFragmentShader = RES_FRAG_GLSL_FRESNEL;
 
-	mDiffuseK = 1.33f;// 1.5f;
-	mRoughness = 0.0012f;
+	mDiffuseK = 1.33f;
+	mRoughness = 0.0010f;
 	mIndexOfRefraction = 1.31f;
 	mColorAmbient = Color(0.1f, 0.1f, 0.2f);
 	mColorDiffuse = Color(0.0f, 0.1f, 0.4f);
 	mColorSpecular = Color(1.0f, 1.0f, 1.0f);
-	mSpecularAttenuation = 16;
-	//mTransluscence = 0.126f;
+	mSpecularAttenuation = 8;
 	mTransluscence = 0.05f;
-	mLightPosition = Vec3f(0.0f, 10.0f, -7.0f);// Vec3f(0.0f, 10.0f, -1.0f);
+	mLightPosition = Vec3f(0.0f, 10.0f, -7.0f);
 }
 
 void ShaderFresnel::pushUniform()

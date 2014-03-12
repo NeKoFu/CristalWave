@@ -8,6 +8,7 @@
 #include "cinder/MayaCamUI.h" 
 #include "cinder/CinderMath.h" 
 #include "cinder/gl/GlslProg.h"
+
 #include "Resources.h"
 #include "ShaderFresnel.h"
 
@@ -22,6 +23,7 @@ using namespace ci::app;
 using namespace std;
 
 class CristalWaveApp : public AppScreenSaver {
+//class CristalWaveApp : public AppBasic{
   public:
 	virtual void prepareSettings(Settings *settings);
 	virtual void setup();
@@ -53,6 +55,7 @@ private:
 // Prepare Window settings for Cinder application
 void CristalWaveApp::prepareSettings(Settings *settings){
 	AppScreenSaver::prepareSettings(settings);
+	//AppBasic::prepareSettings(settings);
 	settings->enableSecondaryDisplayBlanking(false);
 	settings->setFrameRate(60.0f);
 	//settings->disableFrameRate();
@@ -202,4 +205,5 @@ void CristalWaveApp::setCameraOrtho(Vec3f eye, bool reverse){
 
 
 //CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_NONE))
+//CINDER_APP_BASIC(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
 CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))

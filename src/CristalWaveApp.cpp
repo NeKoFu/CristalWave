@@ -1,6 +1,7 @@
 #include "cinder/Cinder.h"
 #include "cinder/Rand.h"
 #include "cinder/Rect.h"
+#include "cinder/app/AppBasic.h"
 #include "cinder/app/AppScreenSaver.h"
 #include "cinder/Color.h"
 #include "cinder/gl/gl.h" 
@@ -12,18 +13,21 @@
 #include "Resources.h"
 #include "ShaderFresnel.h"
 
-#include "cinder/app/AppBasic.h"
-
 #include "BackgroundLayer.h"
 #include "WaveModel.h"
 
+#define SCREENSAVER_MODE
+#ifdef SCREENSAVER_MODE
+#define APP_CLASS_TYPE AppScreenSaver
+#else
+#define APP_CLASS_TYPE AppBasic
+#endif
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class CristalWaveApp : public AppScreenSaver {
-//class CristalWaveApp : public AppBasic{
+class CristalWaveApp : public APP_CLASS_TYPE {
   public:
 	virtual void prepareSettings(Settings *settings);
 	virtual void setup();
@@ -54,9 +58,10 @@ private:
 //////////////////////////////////////////////
 // Prepare Window settings for Cinder application
 void CristalWaveApp::prepareSettings(Settings *settings){
-	AppScreenSaver::prepareSettings(settings);
-	//AppBasic::prepareSettings(settings);
+	APP_CLASS_TYPE::prepareSettings(settings);
+#ifdef SCREENSAVER_MODE
 	settings->enableSecondaryDisplayBlanking(false);
+#endif
 	settings->setFrameRate(60.0f);
 	//settings->disableFrameRate();
 }
@@ -205,5 +210,8 @@ void CristalWaveApp::setCameraOrtho(Vec3f eye, bool reverse){
 
 
 //CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_NONE))
-//CINDER_APP_BASIC(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
+#ifdef SCREENSAVER_MODE
 CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
+#else
+CINDER_APP_BASIC(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
+#endif

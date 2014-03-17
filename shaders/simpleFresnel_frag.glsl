@@ -70,6 +70,7 @@ void main() {
   vec3 color = (ambient + diffuse + specular) + fresnel;
   vec3 alpha = specular * 0.5 + diffuse * 0.5;
   float alphaAttenuation = (N.y - 0.25 + N.z * uSpecularAttenuation * uTransluscence * -N.y * (fresnel + 0.15) * 0.025);
-  gl_FragColor = vec4( color, (alpha.r + alpha.g + alpha.b) * (0.333 * alphaAttenuation) );
+  //gl_FragColor = vec4( color, (alpha.r + alpha.g + alpha.b) * (0.333 * alphaAttenuation) );
+  gl_FragColor = vec4( color * alphaAttenuation * alphaAttenuation, (alpha.r + alpha.g + alpha.b) * (0.333 * alphaAttenuation) );
 }
 

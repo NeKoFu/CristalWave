@@ -24,9 +24,9 @@ void BackgroundLayer::setup(int windowWidth, int windowHeight, int offsetCamerat
 void BackgroundLayer::update(float elapsedTime, Color &outColor){
 
 	Color bgColorBottom(CM_HSV,
-					(cos((elapsedTime + 30) * 4.0f) + 1) * 0.5f,
-					1.0f,
-					(sin(elapsedTime * 2.05f) + 1) * 0.4f
+		(cos((elapsedTime + 30) * 4.0f) + 1) * 0.5f,
+		1.0f,
+		(sin(elapsedTime * 2.05f) + 1) * 0.4f
 	);
 
 	Color bgColorTop = Color(CM_HSV,

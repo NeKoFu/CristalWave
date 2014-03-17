@@ -107,8 +107,8 @@ void WaveModel::update(float elapsedTime){
 // Draw the wave
 void WaveModel::draw(){
 
-	gl::enableAdditiveBlending();
-	//gl::enableAlphaBlending();
+	//gl::enableAdditiveBlending();
+	gl::enableAlphaBlending();
 
 	// Draw
 	glEnableClientState(GL_VERTEX_ARRAY);

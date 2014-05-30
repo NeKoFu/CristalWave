@@ -115,7 +115,13 @@ void CristalWaveApp::update()
 
 	// --------------------------------------------------------
 	// Update Wave
-	mWave.update(elapsedTime);
+	float speedFactor = (10 - (float)getElapsedSeconds()) * 0.1f;
+	if (speedFactor < 0){
+		speedFactor = 0.0f;
+	}
+	// Smooth factor
+	speedFactor = speedFactor * speedFactor * (3 - 2 * speedFactor);
+	mWave.update(elapsedTime, speedFactor * 0.25f);
 	//mWave.update(0);
 
 	// --------------------------------------------------------

@@ -61,12 +61,12 @@ public:
 	WaveModel();
 	~WaveModel();
 	void setup(int windowWidth, int windowHeight, int numRows = 5, int numLines = 200, int offsetCameratH = 0);
-	void update(float elapsedTime);
+	void update(float elapsedTime, float speedFactor = 0);
 	void draw();
 	void writeInfo(Vec2f position);
 
 private:
-	void computePositions(float elapsedTime);
+	void computePositions(float elapsedTime, float speed = 3.8f);
 	void computeNormals();
 };
 

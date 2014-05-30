@@ -97,9 +97,15 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 
 //////////////////////////////////////////////
 // Compute wave move
-void WaveModel::update(float elapsedTime){
+void WaveModel::update(float elapsedTime, float speedFactor){
 
-	computePositions(elapsedTime);
+	float speed = 3.8f + (speedFactor * speedFactor * (3 - 2 * speedFactor));
+	if (elapsedTime < 1)
+	{
+
+	}
+
+	computePositions(elapsedTime, speed);
 	computeNormals();
 }
 
@@ -132,9 +138,7 @@ void WaveModel::draw(){
 
 //////////////////////////////////////////////
 // Compute new elevation of each vertex
-void WaveModel::computePositions(float elapsedTime){
-	
-	float speed = 3.8f;
+void WaveModel::computePositions(float elapsedTime, float speed){
 	elapsedTime = cos(elapsedTime * 0.01f * speed) * 30 + 35;
 	mFrameCounter++;
 

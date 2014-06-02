@@ -41,8 +41,8 @@ private:
 	float mTime;
 	int mNumRows;
 	int mNumLines;
-	int mNbPoints;
-	int mNbIndexes;
+	unsigned int mNbPoints;
+	unsigned int mNbIndexes;
 	int mWaveMotionLimit;
 	int mOffsetH;
 	unsigned int mFrameCounter;
@@ -64,6 +64,22 @@ public:
 	void update(float elapsedTime, float speedFactor = 0);
 	void draw();
 	void writeInfo(Vec2f position);
+	// Getter
+	inline unsigned int getNbPoints(){
+		return mNbPoints;
+	}
+
+	inline Vertice* getVertices(){
+		return mpWave;
+	}
+
+	inline int getNumRows(){
+		return mNumRows;
+	}
+
+	inline int getNumLines(){
+		return mNumLines;
+	}
 
 private:
 	void computePositions(float elapsedTime, float speed = 3.8f);

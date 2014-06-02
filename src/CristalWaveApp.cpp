@@ -15,6 +15,7 @@
 
 #include "BackgroundLayer.h"
 #include "WaveModel.h"
+#include "ParticuleInTheWindManager.h"
 
 #define SCREENSAVER_MODE
 #ifdef SCREENSAVER_MODE
@@ -53,6 +54,9 @@ private:
 	  // Shader parameters
 	  AShader * mpWaveShader;
 	  ShaderFresnel mFresnelShader;
+
+	  // Particule manager
+	  ParticuleInTheWindManager mParticuleInTheWindManager;
 };
 
 //////////////////////////////////////////////
@@ -97,6 +101,23 @@ void CristalWaveApp::setup()
 	// Set the Shader program
 	mpWaveShader = &mFresnelShader;
 	mpWaveShader->load();
+
+	// --------------------------------------------------------
+	// Set Particule manager
+	int nbParticule = 800;
+	//float particuleSpaceScale = 0.025f * app::getWindowWidth();
+	//Particule::BOX spawnBox = Particule::BOX(-particuleSpaceScale * 20.0f, particuleSpaceScale * 20.0f, -particuleSpaceScale, particuleSpaceScale, -particuleSpaceScale, particuleSpaceScale);
+	Particule::BOX spawnBox = Particule::BOX(0, 0, 0, 0, 0, 0);
+
+	mParticuleInTheWindManager.attrPosition = Vec3f::zero();
+	mParticuleInTheWindManager.attrFactor = 0.01f; //0.0005f;
+
+	ParticuleManager::PARTICULE_LIFE particule_life;
+	particule_life.minTTL = 1.0f;
+	particule_life.maxTTL = 2.0f;
+	particule_life.minTTH = 1.0f;
+	particule_life.minTTH = 4.0f;
+	mParticuleInTheWindManager.init(nbParticule, particule_life, spawnBox);
 }
 
 void CristalWaveApp::update()
@@ -127,6 +148,19 @@ void CristalWaveApp::update()
 	// --------------------------------------------------------
 	// Change light position
 	mpWaveShader->setLightPosition(Vec3f(0.0f, 10.0f, -7.0f + sin(elapsedTime) * 2));
+
+	// --------------------------------------------------------
+	// Update particules system
+	float boxSize = 50.0f;
+	//float centerX = sin(elapsedTime * 10) * getWindowWidth() * 0.5f;
+	//Vec3f point = mWave.getVertices()[randInt(0, mWave.getNbPoints())].position;
+	Vec3f point = mWave.getVertices()[randInt(mWave.getNumRows() * 0.2f * mWave.getNumLines(), mWave.getNumRows() * 0.8f * mWave.getNumLines())].position;
+	float centerX = point.x;
+	float centerY = point.y;
+	mParticuleInTheWindManager.spawnBox = Particule::BOX(-boxSize + centerX, boxSize + centerX, -boxSize * 1.5f + centerY, boxSize * 1.5f + centerY, -boxSize, boxSize);
+	//mParticuleInTheWindManager.attrPosition = Vec3f(centerX, centerY, 0.0f);
+	mParticuleInTheWindManager.setRepulsion(true, Vec3f(centerX, centerY, 0.0f));
+	mParticuleInTheWindManager.update();
 }
 
 void CristalWaveApp::draw()
@@ -160,6 +194,10 @@ void CristalWaveApp::draw()
 	// --------------------------------------------------------
 	// UnBind Wave Shader
 	mpWaveShader->unbind();
+
+	// --------------------------------------------------------
+	// Draw particules
+	mParticuleInTheWindManager.draw();
 
 #ifdef SHOW_WAVE_TRACE
 	// --------------------------------------------------------

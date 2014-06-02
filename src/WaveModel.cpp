@@ -133,6 +133,9 @@ void WaveModel::draw(){
 
 	glDrawElements(GL_TRIANGLE_STRIP, mNbIndexes, GL_UNSIGNED_SHORT, mpVerticeIndexes);
 
+	//glDisableClientState(GL_VERTEX_ARRAY);
+	//glDisableClientState(GL_NORMAL_ARRAY);
+
 	gl::disableAlphaBlending();
 }
 
@@ -148,7 +151,6 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 	float border = 0;
 	float sinA, sinB;
 	float sinWaveX;
-	std::ostringstream traceStream;
 	
 	// Lot of waving parameters... 
 	speed += mPerlin.noise(mFrameCounter * 0.0002f, elapsedTime * 0.0002f) * 0.8f;
@@ -178,6 +180,7 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 
 	// Trace //////////////////////////////////////////////////////////
 #ifdef SHOW_WAVE_TRACE
+	std::ostringstream traceStream;
 	traceStream << "speed = " << speed << "\n";
 	traceStream << "elapsedTime = " << elapsedTime << "\n";
 	traceStream << "elapsedTimeSlow = " << elapsedTimeSlow << "\n";

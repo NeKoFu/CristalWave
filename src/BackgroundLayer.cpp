@@ -55,8 +55,13 @@ void BackgroundLayer::draw(){
 	
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
+	gl::disableDepthWrite();
 
 	glVertexPointer(3, GL_FLOAT, 0, mBgVertices);
 	glColorPointer(4, GL_FLOAT, 0, mBgColors);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	gl::enableDepthWrite();
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }

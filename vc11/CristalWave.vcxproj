@@ -117,11 +117,17 @@
     <ClCompile Include="..\src\AShader.cpp" />
     <ClCompile Include="..\src\BackgroundLayer.cpp" />
     <ClCompile Include="..\src\CristalWaveApp.cpp" />
+    <ClCompile Include="..\src\Particule.cpp" />
+    <ClCompile Include="..\src\ParticuleInTheWindManager.cpp" />
+    <ClCompile Include="..\src\ParticuleManager.cpp" />
     <ClCompile Include="..\src\WaveModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\AShader.h" />
     <ClInclude Include="..\include\BackgroundLayer.h" />
+    <ClInclude Include="..\include\Particule.h" />
+    <ClInclude Include="..\include\ParticuleInTheWindManager.h" />
+    <ClInclude Include="..\include\ParticuleManager.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\include\ShaderFresnel.h" />
     <ClInclude Include="..\include\Vertice.h" />

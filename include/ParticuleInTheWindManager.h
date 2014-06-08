@@ -12,6 +12,7 @@ class ParticuleInTheWindManager : public ParticuleManager
 {
 	float _frequency;
 	Perlin _perlin;
+	float _screenWidth;
 
 public:
 	ParticuleInTheWindManager() 
@@ -21,4 +22,9 @@ public:
 	};
 
 	void update();
+
+	void init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth);
+
+protected:
+	void computeParticuleLife(Particule * particule, double elapsedSeconds);
 };

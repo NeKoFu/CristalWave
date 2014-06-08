@@ -51,6 +51,10 @@ private:
 
 public:
 
+	inline float getRadius(){
+		return _radius;
+	}
+
 	inline void setEmitterBox(BOX box){
 		_playBox = box;
 	}

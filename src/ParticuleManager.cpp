@@ -37,7 +37,7 @@ void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE li
 	for (int i = 0; i < nbParticule; i++){
 		
 		//float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, 20.0f))));
-		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, 8.0f))));
+		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, randFloat(5.0f, 12.0f)))));
 		float mass = randFloat(30.0f, 100.0f);
 		float drag = 1.0f;
 		Particule* particule = new Particule(spawnBox, radius, mass, drag);

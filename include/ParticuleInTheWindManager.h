@@ -13,6 +13,7 @@ class ParticuleInTheWindManager : public ParticuleManager
 	float _frequency;
 	Perlin _perlin;
 	float _screenWidth;
+	Timer _timer;
 
 public:
 	ParticuleInTheWindManager() 

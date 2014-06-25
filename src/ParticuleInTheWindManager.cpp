@@ -3,7 +3,7 @@
 
 void ParticuleInTheWindManager::update(){
 	float elapsedSeconds = app::getElapsedSeconds();
-	Vec3f oscilation = Vec3f(sin(elapsedSeconds * 0.3f) * 0.2f, sin(elapsedSeconds * 0.3f) * 0.2f, 0.0f);
+	Vec3f oscilation = Vec3f(sin(elapsedSeconds * 0.3f) * 0.88f, sin(elapsedSeconds * 0.3f) * 0.24f, 0.0f);
 	Vec3f attrForce;
 	Vec3f force;
 
@@ -45,9 +45,10 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
 		}
 	}
-	else {
-		float leftLimit = -_screenWidth * 0.35f;
-		float rightLimit = _screenWidth * 0.35f;
+	// spawn to a new position only if framerate is fast enough
+	else if (static_cast<float>(_timer.getSeconds()) < 0.5f) {
+		float leftLimit = -_screenWidth * 0.3f;
+		float rightLimit = _screenWidth * 0.3f;
 		if (particule->getRadius() < 3.5f
 			|| spawnBox.x1 < leftLimit
 			|| spawnBox.x2 > rightLimit){
@@ -62,10 +63,12 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 			particule->newRandomPosition(spawnBox);
 		}
 	}
+	_timer.start();
 }
 
 void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth){
 	_screenWidth = screenWidth;
+	_timer.start();
 	Particule::BOX spawnBox = Particule::BOX(0, 0, 0, 0, 0, 0);
 	((ParticuleManager*)this)->init(nbParticule, lifeParameters, spawnBox);
 }

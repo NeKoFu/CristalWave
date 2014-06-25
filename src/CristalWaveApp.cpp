@@ -149,7 +149,7 @@ void CristalWaveApp::update()
 
 	// --------------------------------------------------------
 	// Update particules system
-	float boxSize = 60.0f;
+	float boxSize = 80.0f;
 	Vec3f point = mWave.getVertices()[randInt(mWave.getNumRows() * 0.2f * mWave.getNumLines(), mWave.getNumRows() * 0.8f * mWave.getNumLines())].position;
 	float centerX = point.x;
 	float centerY = point.y;

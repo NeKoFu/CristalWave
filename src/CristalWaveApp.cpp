@@ -65,6 +65,8 @@ void CristalWaveApp::prepareSettings(Settings *settings){
 	APP_CLASS_TYPE::prepareSettings(settings);
 #ifdef SCREENSAVER_MODE
 	settings->enableSecondaryDisplayBlanking(false);
+#else
+	settings->setWindowSize(1600, 900);
 #endif
 	settings->setFrameRate(60.0f);
 	//settings->disableFrameRate();

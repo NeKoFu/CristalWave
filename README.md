@@ -13,8 +13,8 @@ Copy [CristalWave.sCr](https://github.com/NeKoFu/CristalWave/blob/master/vc11/Re
 
 ## Todo
 
+* Add particles glow
 * Add Depth of Field post process
-* Add particles
 * Add settings window
 
 ## Credits

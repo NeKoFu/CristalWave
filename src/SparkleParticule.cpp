@@ -5,7 +5,7 @@ SparkleParticule::SparkleParticule(const Particule::BOX playBox, float radius, f
 
 	float limiter = 1.0f;
 
-	_nbRepeatDraw = randInt(1, 5);
+	_nbRepeatDraw = randInt(1, 6);
 	
 	if (radius > 3) {
 		limiter *= 3 / radius;

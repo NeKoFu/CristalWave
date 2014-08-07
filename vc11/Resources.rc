@@ -2,3 +2,4 @@
 
 RES_VERT_GLSL_FRESNEL		GLSL	"..\\shaders\\simpleFresnel_vert.glsl"
 RES_FRAG_GLSL_FRESNEL		GLSL	"..\\shaders\\simpleFresnel_frag.glsl"
+RES_TEXTURE_PARTICLE_GLOW	IMAGE	"..\\textures\\particle_texture_glow.png"

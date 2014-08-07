@@ -2,8 +2,9 @@
 
 #include <vector>
 #include "cinder/gl/gl.h"
+#include "cinder/ImageIo.h"
 #include "cinder/perlin.h"
-#include "Particule.h"
+#include "SparkleParticule.h"
 #include "ParticuleManager.h"
 
 using namespace std;
@@ -14,6 +15,7 @@ class ParticuleInTheWindManager : public ParticuleManager
 	Perlin _perlin;
 	float _screenWidth;
 	Timer _timer;
+	gl::Texture _texture;
 
 public:
 	ParticuleInTheWindManager() 
@@ -23,7 +25,7 @@ public:
 	};
 
 	void update();
-
+	void draw();
 	void init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth);
 
 protected:

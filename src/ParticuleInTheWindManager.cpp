@@ -1,5 +1,8 @@
 #include "cinder/app/AppNative.h"
 #include "ParticuleInTheWindManager.h"
+#include "Resources.h"
+
+using namespace ci::app;
 
 void ParticuleInTheWindManager::update(){
 	float elapsedSeconds = app::getElapsedSeconds();
@@ -41,7 +44,6 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 		}
 		else{
 			particule->status = Particule::STATE::HIDDEN;
-			//particule->setColor(Color(1.0f, 0.0f, 0.0f));
 			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
 		}
 	}
@@ -53,7 +55,6 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 			|| spawnBox.x1 < leftLimit
 			|| spawnBox.x2 > rightLimit){
 			
-			//particule->setColor(Color(0.0f, 0.0f, 1.0f));
 			ttl = (Particule::STATE::NONE != particule->status) ? app::getElapsedSeconds() + randFloat(life.minTTL, life.maxTTL) : 0.0f;
 			tth = ttl + randFloat(life.minTTH, life.maxTTH);
 
@@ -69,6 +70,36 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth){
 	_screenWidth = screenWidth;
 	_timer.start();
+
+	_texture = gl::Texture(loadImage(loadResource(RES_TEXTURE_PARTICLE_GLOW, "IMAGE")));
+
 	Particule::BOX spawnBox = Particule::BOX(0, 0, 0, 0, 0, 0);
-	((ParticuleManager*)this)->init(nbParticule, lifeParameters, spawnBox);
+
+	life = lifeParameters;
+	for (int i = 0; i < nbParticule; i++){
+
+		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, randFloat(5.0f, 18.0f)))));
+		float mass = randFloat(30.0f, 100.0f);
+		float drag = 1.0f;
+		SparkleParticule* particule = new SparkleParticule(spawnBox, radius, mass, drag);
+		addParticule(particule);
+	}
+}
+
+void ParticuleInTheWindManager::draw(){
+	_texture.enableAndBind();
+	//ParticuleManager::draw();
+
+	gl::enableAdditiveBlending();
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TRIANGLE_FAN);
+
+	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
+		(static_cast<SparkleParticule*>(*it))->draw();
+	}
+	gl::enableAlphaBlending(false);
+
+	_texture.disable();
+
 }

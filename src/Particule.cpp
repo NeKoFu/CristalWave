@@ -23,18 +23,12 @@ void Particule::update(){
 }
 
 void Particule::draw(){
-	//gl::drawCube(_currentPosition, Vec3f(_radius, _radius, _radius));
-	//gl::color(_color.r, _color.g, _color.b, 1.0f);
+	float radius = _radius * 2;
 	if (_opacity > 0.0f)
 	{
 		gl::color(_color.r, _color.g, _color.b, _opacity);
-		//gl::drawSphere(_currentPosition, _radius);
-		gl::drawSolidCircle(Vec2f(_currentPosition.x, _currentPosition.y), _radius);
+		//gl::drawSolidCircle(Vec2f(_currentPosition.x, _currentPosition.y), _radius);
+		gl::drawSolidRect(Rectf(_currentPosition.x - radius, _currentPosition.y - radius
+								, _currentPosition.x + radius, _currentPosition.y + radius));
 	}
-	else
-	{
-		//gl::color(_color.r, 0.0f, 0.0f, 1.0f);
-		//gl::drawSphere(_currentPosition, _radius);
-	}
-	
 }

@@ -39,7 +39,6 @@ public:
 	PARTICULE_LIFE life;
 	Particule::BOX spawnBox;
 
-//public:
 	ParticuleManager();
 	~ParticuleManager();
 

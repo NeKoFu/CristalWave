@@ -48,28 +48,30 @@ void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE li
 void ParticuleManager::computeParticuleLife(Particule * particule, double elapsedSeconds){
 	float ttl = 0.0f, tth = 0.0f;
 	float opacity = 0.0f;
+	float elapsedSecondsFloat = static_cast<float>(elapsedSeconds);
 
-	if (particule->getTimeToHide() > elapsedSeconds){
-		if (particule->getTimeToLive() > elapsedSeconds){
+	if (particule->getTimeToHide() > elapsedSecondsFloat){
+		if (particule->getTimeToLive() > elapsedSecondsFloat){
 
 			particule->status = Particule::STATE::LIVE;
 			//particule->setColor(Color(0.0f, 1.0f, 0.0f));
 			//particule->setOpacity(particule->getOpacity() + elapsedSeconds * 0.025f);
 			//particule->setOpacity(sin((elapsedSeconds + particule->getTimeOffset()) * 20.0f) * 0.5f + 0.5f);
-			opacity = (sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f + sin(elapsedSeconds * 0.25f + particule->getTimeOffset())) * 0.5f + 0.5f) * 0.75f;
+			float sfloat1 = static_cast<float>(sin(elapsedSecondsFloat * 0.25f + particule->getTimeOffset()));
+			opacity = (static_cast<float>(sin((elapsedSecondsFloat + particule->getTimeOffset()) * 8.0f + sfloat1)) * 0.5f + 0.5f) * 0.75f;
 			opacity = opacity * opacity * (3 - 2 * opacity) * 0.75f;
 			particule->setOpacity(opacity);
 		}
 		else{
 			particule->status = Particule::STATE::HIDDEN;
 			//particule->setColor(Color(1.0f, 0.0f, 0.0f));
-			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
+			particule->setOpacity(particule->getOpacity() - elapsedSecondsFloat * 0.025f);
 		}
 		//(*it)->smoothBlink();
 	}
 	else{
 		//particule->setColor(Color(0.0f, 0.0f, 1.0f));
-		ttl = (Particule::STATE::NONE != particule->status) ? app::getElapsedSeconds() + randFloat(life.minTTL, life.maxTTL) : 0.0f;
+		ttl = (Particule::STATE::NONE != particule->status) ? static_cast<float>(app::getElapsedSeconds()) + randFloat(life.minTTL, life.maxTTL) : 0.0f;
 		//ttl = app::getElapsedSeconds() + randFloat(life.minTTL, life.maxTTL);
 		tth = ttl + randFloat(life.minTTH, life.maxTTH);
 
@@ -103,7 +105,6 @@ void ParticuleManager::update(){
 }
 
 void ParticuleManager::draw(){
-	//gl::enableAlphaBlending();
 	gl::enableAdditiveBlending();
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);

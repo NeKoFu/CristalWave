@@ -45,27 +45,29 @@ void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE li
 	}
 }
 
-void ParticuleManager::computeParticuleLife(Particule * particule, double elapsedSeconds){
+void ParticuleManager::computeParticuleLife(Particule * particule, float elapsedSeconds){
 	float ttl = 0.0f, tth = 0.0f;
 	float opacity = 0.0f;
-	float elapsedSecondsFloat = static_cast<float>(elapsedSeconds);
 
-	if (particule->getTimeToHide() > elapsedSecondsFloat){
-		if (particule->getTimeToLive() > elapsedSecondsFloat){
+	if (particule->getTimeToHide() > elapsedSeconds){
+		if (particule->getTimeToLive() > elapsedSeconds){
 
 			particule->status = Particule::STATE::LIVE;
 			//particule->setColor(Color(0.0f, 1.0f, 0.0f));
 			//particule->setOpacity(particule->getOpacity() + elapsedSeconds * 0.025f);
 			//particule->setOpacity(sin((elapsedSeconds + particule->getTimeOffset()) * 20.0f) * 0.5f + 0.5f);
-			float sfloat1 = static_cast<float>(sin(elapsedSecondsFloat * 0.25f + particule->getTimeOffset()));
-			opacity = (static_cast<float>(sin((elapsedSecondsFloat + particule->getTimeOffset()) * 8.0f + sfloat1)) * 0.5f + 0.5f) * 0.75f;
+			opacity = (
+				static_cast<float>(sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f
+					+ static_cast<float>(sin(elapsedSeconds * 0.25f + particule->getTimeOffset()))
+				))
+				* 0.5f + 0.5f) * 0.75f;
 			opacity = opacity * opacity * (3 - 2 * opacity) * 0.75f;
 			particule->setOpacity(opacity);
 		}
 		else{
 			particule->status = Particule::STATE::HIDDEN;
 			//particule->setColor(Color(1.0f, 0.0f, 0.0f));
-			particule->setOpacity(particule->getOpacity() - elapsedSecondsFloat * 0.025f);
+			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
 		}
 		//(*it)->smoothBlink();
 	}
@@ -84,7 +86,7 @@ void ParticuleManager::computeParticuleLife(Particule * particule, double elapse
 
 void ParticuleManager::update(){
 	Vec3f force;
-	double elapsedSeconds = app::getElapsedSeconds();
+	float elapsedSeconds = static_cast<float>(app::getElapsedSeconds());
 	
 
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){

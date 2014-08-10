@@ -33,7 +33,7 @@ public:
 		};
 	};
 
-private:
+protected:
 	Vec3f _currentPosition
 		, _previousPosition
 		, _forces;
@@ -41,6 +41,7 @@ private:
 	BOX _playBox;
 	
 	float _radius
+		, _scale
 		, _mass
 		, _drag
 		, _ttl
@@ -54,6 +55,18 @@ public:
 
 	inline float getRadius(){
 		return _radius;
+	}
+
+	inline void setRadius(float radius) {
+		_radius = radius;
+	}
+
+	inline float getScale(){
+		return _scale;
+	}
+
+	inline void setScale(float scale) {
+		_scale = scale;
 	}
 
 	inline void setEmitterBox(BOX box){

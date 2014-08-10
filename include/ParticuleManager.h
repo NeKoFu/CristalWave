@@ -27,7 +27,7 @@ protected:
 
 	Vec3f computeAttractorForce(Vec3f position);
 	Vec3f computeRepulsionForce(Vec3f position);
-	virtual void computeParticuleLife(Particule * particule, double elapsedSeconds);
+	virtual void computeParticuleLife(Particule * particule, float elapsedSeconds);
 
 public:
 	Vec3f attrPosition

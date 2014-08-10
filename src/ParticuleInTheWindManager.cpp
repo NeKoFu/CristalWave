@@ -5,7 +5,7 @@
 using namespace ci::app;
 
 void ParticuleInTheWindManager::update(){
-	float elapsedSeconds = app::getElapsedSeconds();
+	float elapsedSeconds = static_cast<float>(app::getElapsedSeconds());
 	Vec3f oscilation = Vec3f(sin(elapsedSeconds * 0.3f) * 0.88f, sin(elapsedSeconds * 0.3f) * 0.24f, 0.0f);
 	Vec3f attrForce;
 	Vec3f force;
@@ -13,7 +13,7 @@ void ParticuleInTheWindManager::update(){
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
 		
 		// Set visible life
-		computeParticuleLife(*it, elapsedSeconds);
+		computeParticuleLife(((SparkleParticule*)*it), elapsedSeconds);
 
 		// Attract to center
 		attrPosition.x = (*it)->getPosition().x;
@@ -30,7 +30,7 @@ void ParticuleInTheWindManager::update(){
 }
 
 
-void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, double elapsedSeconds){
+void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particule, float elapsedSeconds){
 	float ttl = 0.0f, tth = 0.0f;
 	float opacity = 0.0f;
 
@@ -38,9 +38,24 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 		if (particule->getTimeToLive() > elapsedSeconds){
 
 			particule->status = Particule::STATE::LIVE;
-			opacity = (sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f + sin(elapsedSeconds * 2.33f + particule->getTimeOffset())) * 0.5f + 0.5f) * 0.75f;
+
+			// set smooth scale down at start
+			float scale = 1.0f;
+			if (elapsedSeconds <= 5.0){
+				scale = (5.0f - elapsedSeconds) * 0.2f;
+				scale = (scale <= 0.0f) ? 1.0f : (scale * scale * (3 - 2 * scale)) * 20 + 1.0f;
+			}
+
+			particule->setScale(scale);
+
+			opacity = (
+				static_cast<float>(sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f
+					+ static_cast<float>(sin(elapsedSeconds * 2.33f + particule->getTimeOffset()))
+				))
+				* 0.5f + 0.5f) * 0.75f;
 			opacity = opacity * opacity * (3 - 2 * opacity) * 0.85f;
 			particule->setOpacity(opacity);
+
 		}
 		else{
 			particule->status = Particule::STATE::HIDDEN;
@@ -67,39 +82,42 @@ void ParticuleInTheWindManager::computeParticuleLife(Particule * particule, doub
 	_timer.start();
 }
 
-void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth){
+void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParameters, int screenWidth){
 	_screenWidth = screenWidth;
 	_timer.start();
 
 	_texture = gl::Texture(loadImage(loadResource(RES_TEXTURE_PARTICLE_GLOW, "IMAGE")));
+	_shader.load();
 
 	Particule::BOX spawnBox = Particule::BOX(0, 0, 0, 0, 0, 0);
 
 	life = lifeParameters;
 	for (int i = 0; i < nbParticule; i++){
 
-		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, randFloat(5.0f, 18.0f)))));
+		float radius = randFloat(1.0f, randFloat(1.5f, randFloat(2.3f, randFloat(3.0f, randFloat(4.0f, 64.0f)))));
 		float mass = randFloat(30.0f, 100.0f);
 		float drag = 1.0f;
-		SparkleParticule* particule = new SparkleParticule(spawnBox, radius, mass, drag);
+		SparkleParticule* particule = new SparkleParticule(spawnBox, radius, mass, drag, _shader);
 		addParticule(particule);
 	}
 }
 
 void ParticuleInTheWindManager::draw(){
 	_texture.enableAndBind();
+	_shader.bind();
 	//ParticuleManager::draw();
 
 	gl::enableAdditiveBlending();
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TRIANGLE_FAN);
+	//glEnableClientState(GL_TRIANGLE_FAN);
 
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
 		(static_cast<SparkleParticule*>(*it))->draw();
 	}
-	gl::enableAlphaBlending(false);
 
+	gl::enableAlphaBlending(false);
+	_shader.unbind();
 	_texture.disable();
 
 }

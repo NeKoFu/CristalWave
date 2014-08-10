@@ -3,6 +3,7 @@
 Particule::Particule(const Particule::BOX playBox, float radius, float mass, float drag){
 	_playBox = playBox;
 	_radius = radius;
+	_scale = 1.0f;
 	_mass = (mass > 0.00001f || mass < -0.00001f) ? mass : 1.0f;
 	_drag = drag;
 	_ttl = 0.0f;
@@ -23,7 +24,7 @@ void Particule::update(){
 }
 
 void Particule::draw(){
-	float radius = _radius * 2;
+	float radius = _radius * _scale;
 	if (_opacity > 0.0f)
 	{
 		gl::color(_color.r, _color.g, _color.b, _opacity);

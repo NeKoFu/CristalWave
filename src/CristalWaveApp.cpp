@@ -117,7 +117,7 @@ void CristalWaveApp::setup()
 	particule_life.maxTTL = 2.0f;
 	particule_life.minTTH = 1.0f;
 	particule_life.minTTH = 4.0f;
-	mParticuleInTheWindManager.init(nbParticule, particule_life, getWindowWidth());
+	mParticuleInTheWindManager.init(nbParticule, particule_life, static_cast<float>(getWindowWidth()));
 }
 
 void CristalWaveApp::update()
@@ -152,7 +152,8 @@ void CristalWaveApp::update()
 	// --------------------------------------------------------
 	// Update particules system
 	float boxSize = 80.0f;
-	Vec3f point = mWave.getVertices()[randInt(mWave.getNumRows() * 0.2f * mWave.getNumLines(), mWave.getNumRows() * 0.8f * mWave.getNumLines())].position;
+	int vId = static_cast<int>(randFloat(mWave.getNumRows() * 0.2f * mWave.getNumLines(), mWave.getNumRows() * 0.8f * mWave.getNumLines()));
+	Vec3f point = mWave.getVertices()[vId].position;
 	float centerX = point.x;
 	float centerY = point.y;
 	mParticuleInTheWindManager.spawnBox = Particule::BOX(-boxSize + centerX, boxSize + centerX, -boxSize * 1.3f + centerY, boxSize * 1.3f + centerY, -boxSize, boxSize);

@@ -47,6 +47,10 @@ void AShader::setSpecularColor(Color c){
 	mColorSpecular = c;
 }
 
+void AShader::setOpacity(float opacity){
+	mOpacity = opacity;
+}
+
 void AShader::setLightPosition(Vec3f position){
 	mLightPosition = position;
 }

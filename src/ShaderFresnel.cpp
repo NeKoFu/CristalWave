@@ -17,6 +17,10 @@ ShaderFresnel::ShaderFresnel(){
 	mLightPosition = Vec3f(0.0f, 10.0f, -7.0f);
 }
 
+void ShaderFresnel::load() {
+	AShader::load();
+};
+
 void ShaderFresnel::pushUniform()
 {
 	mShaderProgram.uniform("uK", mDiffuseK);

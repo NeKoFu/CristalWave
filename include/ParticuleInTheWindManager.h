@@ -13,9 +13,10 @@ class ParticuleInTheWindManager : public ParticuleManager
 {
 	float _frequency;
 	Perlin _perlin;
-	float _screenWidth;
+	int _screenWidth;
 	Timer _timer;
 	gl::Texture _texture;
+	SparkleShader _shader;
 
 public:
 	ParticuleInTheWindManager() 
@@ -26,8 +27,8 @@ public:
 
 	void update();
 	void draw();
-	void init(int nbParticule, PARTICULE_LIFE lifeParameters, float screenWidth);
+	void init(int nbParticule, PARTICULE_LIFE lifeParameters, int screenWidth);
 
 protected:
-	void computeParticuleLife(Particule * particule, double elapsedSeconds);
+	void computeParticuleLife(SparkleParticule * particule, float elapsedSeconds);
 };

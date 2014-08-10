@@ -1,15 +1,10 @@
-
-varying vec2 vTexCoord;
  
-// remember that you should draw a screen aligned quad
+varying vec2 vTexCoord;
+
+// pass texture coordinates
 void main(void)
 {
-   gl_Position = ftransform();
-  
-   // Clean up inaccuracies
-   vec2 Pos;
-   Pos = sign(gl_Vertex.xy);
-
-   // Image-space
-   vTexCoord = Pos;
+	//gl_TexCoord[0] = gl_MultiTexCoord0;
+	vTexCoord = gl_MultiTexCoord0;
+	gl_Position = ftransform();
 }

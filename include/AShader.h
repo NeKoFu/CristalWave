@@ -21,6 +21,7 @@ protected:
 	Color mColorDiffuse;
 	Color mColorSpecular;
 	Vec3f mLightPosition;
+	float mOpacity;
 
 public:
 	void load();
@@ -31,5 +32,6 @@ public:
 	void setAmbiantColor(Color c);
 	void setDiffuseColor(Color c);
 	void setSpecularColor(Color c);
+	void setOpacity(float opacity);
 	void setLightPosition(Vec3f position);
 };

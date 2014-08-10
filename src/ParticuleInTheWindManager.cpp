@@ -68,7 +68,7 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particul
 		limit *= limit * limit;
 		float leftLimit = (-_screenWidth * 0.45f) + _screenWidth * limit;
 		float rightLimit = (_screenWidth * 0.45f) - _screenWidth * limit;
-		if (particule->getRadius() < 4.0f
+		if (particule->getRadius() < 3.0f
 			|| spawnBox.x1 < leftLimit
 			|| spawnBox.x2 > rightLimit){
 			

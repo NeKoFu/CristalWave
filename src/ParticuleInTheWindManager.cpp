@@ -65,9 +65,9 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particul
 	// spawn to a new position only if framerate is fast enough
 	else if (static_cast<float>(_timer.getSeconds()) < 0.5f) {
 		float limit = 4 / particule->getRadius();
-		limit *= limit;
-		float leftLimit = (-_screenWidth * 0.4f) + _screenWidth * limit;
-		float rightLimit = (_screenWidth * 0.4f) - _screenWidth * limit;
+		limit *= limit * limit;
+		float leftLimit = (-_screenWidth * 0.45f) + _screenWidth * limit;
+		float rightLimit = (_screenWidth * 0.45f) - _screenWidth * limit;
 		if (particule->getRadius() < 4.0f
 			|| spawnBox.x1 < leftLimit
 			|| spawnBox.x2 > rightLimit){

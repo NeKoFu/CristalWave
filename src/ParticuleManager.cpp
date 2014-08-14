@@ -36,7 +36,6 @@ void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE li
 
 	for (int i = 0; i < nbParticule; i++){
 		
-		//float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, 20.0f))));
 		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, randFloat(5.0f, 12.0f)))));
 		float mass = randFloat(30.0f, 100.0f);
 		float drag = 1.0f;
@@ -53,9 +52,6 @@ void ParticuleManager::computeParticuleLife(Particule * particule, float elapsed
 		if (particule->getTimeToLive() > elapsedSeconds){
 
 			particule->status = Particule::STATE::LIVE;
-			//particule->setColor(Color(0.0f, 1.0f, 0.0f));
-			//particule->setOpacity(particule->getOpacity() + elapsedSeconds * 0.025f);
-			//particule->setOpacity(sin((elapsedSeconds + particule->getTimeOffset()) * 20.0f) * 0.5f + 0.5f);
 			opacity = (
 				static_cast<float>(sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f
 					+ static_cast<float>(sin(elapsedSeconds * 0.25f + particule->getTimeOffset()))
@@ -66,15 +62,11 @@ void ParticuleManager::computeParticuleLife(Particule * particule, float elapsed
 		}
 		else{
 			particule->status = Particule::STATE::HIDDEN;
-			//particule->setColor(Color(1.0f, 0.0f, 0.0f));
 			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
 		}
-		//(*it)->smoothBlink();
 	}
 	else{
-		//particule->setColor(Color(0.0f, 0.0f, 1.0f));
 		ttl = (Particule::STATE::NONE != particule->status) ? static_cast<float>(app::getElapsedSeconds()) + randFloat(life.minTTL, life.maxTTL) : 0.0f;
-		//ttl = app::getElapsedSeconds() + randFloat(life.minTTL, life.maxTTL);
 		tth = ttl + randFloat(life.minTTH, life.maxTTH);
 
 		particule->status = Particule::STATE::HIDDEN;

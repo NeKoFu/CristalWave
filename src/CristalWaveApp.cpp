@@ -113,8 +113,8 @@ void CristalWaveApp::setup()
 	mParticuleInTheWindManager.attrFactor = 0.01f; //0.0005f;
 
 	ParticuleManager::PARTICULE_LIFE particule_life;
-	particule_life.minTTL = 1.0f;
-	particule_life.maxTTL = 2.0f;
+	particule_life.minTTL = 0.5f;
+	particule_life.maxTTL = 3.5f;
 	particule_life.minTTH = 1.0f;
 	particule_life.minTTH = 4.0f;
 	mParticuleInTheWindManager.init(nbParticule, particule_life, static_cast<float>(getWindowWidth()));
@@ -143,7 +143,6 @@ void CristalWaveApp::update()
 	// Smooth factor
 	speedFactor = speedFactor * speedFactor * (3 - 2 * speedFactor);
 	mWave.update(elapsedTime, speedFactor * 0.25f);
-	//mWave.update(0);
 
 	// --------------------------------------------------------
 	// Change light position
@@ -158,6 +157,7 @@ void CristalWaveApp::update()
 	float centerY = point.y;
 	mParticuleInTheWindManager.spawnBox = Particule::BOX(-boxSize + centerX, boxSize + centerX, -boxSize * 1.3f + centerY, boxSize * 1.3f + centerY, -boxSize, boxSize);
 	mParticuleInTheWindManager.setRepulsion(true, Vec3f(centerX, centerY, 0.0f));
+	mParticuleInTheWindManager.setColor(topColor);
 	mParticuleInTheWindManager.update();
 }
 
@@ -191,6 +191,7 @@ void CristalWaveApp::draw()
 	// --------------------------------------------------------
 	// Draw particules
 	mParticuleInTheWindManager.draw();
+
 
 #ifdef SHOW_WAVE_TRACE
 	// --------------------------------------------------------
@@ -248,7 +249,7 @@ void CristalWaveApp::setCameraOrtho(Vec3f eye, bool reverse){
 
 //CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_NONE))
 #ifdef SCREENSAVER_MODE
-CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
+CINDER_APP_SCREENSAVER(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_16))
 #else
 CINDER_APP_BASIC(CristalWaveApp, RendererGl(RendererGl::AA_MSAA_8))
 #endif

@@ -27,9 +27,14 @@ void Particule::draw(){
 	float radius = _radius * _scale;
 	if (_opacity > 0.0f)
 	{
-		gl::color(_color.r, _color.g, _color.b, _opacity);
+		setMaterial();
+
 		//gl::drawSolidCircle(Vec2f(_currentPosition.x, _currentPosition.y), _radius);
 		gl::drawSolidRect(Rectf(_currentPosition.x - radius, _currentPosition.y - radius
 								, _currentPosition.x + radius, _currentPosition.y + radius));
 	}
+}
+
+void Particule::setMaterial(){
+	gl::color(_color.r, _color.g, _color.b, _opacity);
 }

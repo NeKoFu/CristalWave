@@ -28,6 +28,7 @@ public:
 	void update();
 	void draw();
 	void init(int nbParticule, PARTICULE_LIFE lifeParameters, int screenWidth);
+	void setColor(Color color);
 
 protected:
 	void computeParticuleLife(SparkleParticule * particule, float elapsedSeconds);

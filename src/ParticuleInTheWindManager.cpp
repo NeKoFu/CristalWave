@@ -4,6 +4,10 @@
 
 using namespace ci::app;
 
+void ParticuleInTheWindManager::setColor(Color color){
+	_shader.setAmbiantColor(color + 0.5f);
+}
+
 void ParticuleInTheWindManager::update(){
 	float elapsedSeconds = static_cast<float>(app::getElapsedSeconds());
 	Vec3f oscilation = Vec3f(sin(elapsedSeconds * 0.3f) * 0.88f, sin(elapsedSeconds * 0.3f) * 0.24f, 0.0f);
@@ -17,12 +21,12 @@ void ParticuleInTheWindManager::update(){
 
 		// Attract to center
 		attrPosition.x = (*it)->getPosition().x;
-		attrForce = (attrPosition - (*it)->getPosition()) * attrFactor  * oscilation * 10;
+		attrForce = (attrPosition - (*it)->getPosition()) * attrFactor  * oscilation * 5;
 		//attrForce *= attrForce; // Effervescent style
 		(*it)->addForces(attrForce);
 
 		// Add noise 
-		force = _perlin.dfBm((*it)->getPosition() * _frequency) * 1.8f;
+		force = _perlin.dfBm((*it)->getPosition() * _frequency) * 2.2f;
 		(*it)->addForces(force);
 		(*it)->addForces(oscilation);
 		(*it)->update();
@@ -39,21 +43,30 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particul
 
 			particule->status = Particule::STATE::LIVE;
 
-			// set smooth scale down at start
-			float scale = 1.0f;
-			if (elapsedSeconds <= 5.0){
-				scale = (5.0f - elapsedSeconds) * 0.2f;
-				scale = (scale <= 0.0f) ? 1.0f : (scale * scale * (3 - 2 * scale)) * 20 + 1.0f;
-			}
-
-			particule->setScale(scale);
-
 			opacity = (
 				static_cast<float>(sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f
 					+ static_cast<float>(sin(elapsedSeconds * 2.33f + particule->getTimeOffset()))
 				))
-				* 0.5f + 0.5f) * 0.75f;
-			opacity = opacity * opacity * (3 - 2 * opacity) * 0.85f;
+				* 0.5f + 0.5f) * 0.7f;
+			opacity = opacity * opacity * (3 - 2 * opacity);
+
+
+			// set smooth scale down at start
+			float scale = 1.0f;
+			if (elapsedSeconds <= 5.0){
+				scale = (5.0f - elapsedSeconds) * 0.2f;
+				if (scale <= 0.0f)
+				{
+					scale = 1.0f;
+				}
+				else {
+					scale = scale * scale * (3 - 2 * scale);
+					opacity -= scale;
+					scale = scale * 24 + 1.0f;
+				}
+			}
+
+			particule->setScale(scale);
 			particule->setOpacity(opacity);
 
 		}
@@ -64,7 +77,7 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particul
 	}
 	// spawn to a new position only if framerate is fast enough
 	else if (static_cast<float>(_timer.getSeconds()) < 0.5f) {
-		float limit = 4 / particule->getRadius();
+		float limit = 5 / particule->getRadius();
 		limit *= limit * limit;
 		float leftLimit = (-_screenWidth * 0.45f) + _screenWidth * limit;
 		float rightLimit = (_screenWidth * 0.45f) - _screenWidth * limit;
@@ -72,7 +85,7 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule * particul
 			|| spawnBox.x1 < leftLimit
 			|| spawnBox.x2 > rightLimit){
 			
-			ttl = (Particule::STATE::NONE != particule->status) ? app::getElapsedSeconds() + randFloat(life.minTTL, life.maxTTL) : 0.0f;
+			ttl = (Particule::STATE::NONE != particule->status) ? static_cast<float>(app::getElapsedSeconds()) + randFloat(life.minTTL, life.maxTTL) : 0.0f;
 			tth = ttl + randFloat(life.minTTH, life.maxTTH);
 
 			particule->status = Particule::STATE::HIDDEN;
@@ -96,7 +109,7 @@ void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParamet
 	life = lifeParameters;
 	for (int i = 0; i < nbParticule; i++){
 
-		float radius = randFloat(1.0f, randFloat(1.5f, randFloat(2.3f, randFloat(3.0f, randFloat(4.0f, 64.0f)))));
+		float radius = randFloat(1.0f, randFloat(1.3f, randFloat(1.8f, randFloat(2.5f, randFloat(4.0f, 64.0f)))));
 		float mass = randFloat(30.0f, 100.0f);
 		float drag = 1.0f;
 		SparkleParticule* particule = new SparkleParticule(spawnBox, radius, mass, drag, _shader);
@@ -107,12 +120,10 @@ void ParticuleInTheWindManager::init(int nbParticule, PARTICULE_LIFE lifeParamet
 void ParticuleInTheWindManager::draw(){
 	_texture.enableAndBind();
 	_shader.bind();
-	//ParticuleManager::draw();
 
 	gl::enableAdditiveBlending();
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-	//glEnableClientState(GL_TRIANGLE_FAN);
 
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
 		(static_cast<SparkleParticule*>(*it))->draw();

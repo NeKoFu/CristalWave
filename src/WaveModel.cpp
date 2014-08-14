@@ -113,7 +113,6 @@ void WaveModel::update(float elapsedTime, float speedFactor){
 // Draw the wave
 void WaveModel::draw(){
 
-	//gl::enableAdditiveBlending();
 	gl::enableAlphaBlending();
 
 	// Draw

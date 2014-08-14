@@ -14,9 +14,8 @@ class SparkleParticule : public Particule
 
 public:
 	SparkleParticule(const BOX playBox, float radius, float mass, float drag, SparkleShader &shader);
-	void draw();
 
-	inline void setOpacity(float opacity){
+	virtual inline void setOpacity(float opacity){
 		opacity /= _scale * 4;
 
 		if (opacity > 1.0f) {
@@ -26,8 +25,10 @@ public:
 		_opacity = (opacity > 0.0f) ? opacity : 0.0f;
 	}
 
-	inline void setScale(float scale) {
+	virtual inline void setScale(float scale) {
 		_scale = randFloat(scale, scale * 1.5f);
 	}
 
+protected:
+	virtual void setMaterial();
 };

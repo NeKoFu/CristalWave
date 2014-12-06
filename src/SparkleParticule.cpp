@@ -1,11 +1,12 @@
 #include "SparkleParticule.h"
 
-SparkleParticule::SparkleParticule(const Particule::BOX playBox, float radius, float mass, float drag, SparkleShader &shader)
-	: Particule(playBox, radius, mass, drag), _shader(shader){
+SparkleParticule::SparkleParticule(Particule::ISPRAY & spray, float radius, float mass, float drag, SparkleShader &shader)
+	: Particule(spray, radius, mass, drag), _shader(shader){
 
 	float limiter = 1.0f;
 
-	_nbAdditiveFactor = randFloat(1, 18);
+	//_nbAdditiveFactor = randFloat(1, 18) * randFloat(1, 4) / radius;
+	_nbAdditiveFactor = randFloat(5 / radius, 10);
 	
 	if (radius > 3) {
 		limiter *= 3 / radius;

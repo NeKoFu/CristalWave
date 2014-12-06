@@ -24,14 +24,23 @@ protected:
 	float mOpacity;
 
 public:
-	void load();
+	virtual void load();
 	virtual void pushUniform() = 0;
-	void bind();
-	void unbind();
+	virtual void bind();
+	virtual void unbind();
 
-	void setAmbiantColor(Color c);
-	void setDiffuseColor(Color c);
-	void setSpecularColor(Color c);
-	void setOpacity(float opacity);
-	void setLightPosition(Vec3f position);
+	virtual void setAmbiantColor(Color c);
+	virtual Color getAmbiantColor();
+
+	virtual void setDiffuseColor(Color c);
+	virtual Color getDiffuseColor();
+
+	virtual void setSpecularColor(Color c);
+	virtual Color getSpecularColor();
+
+	virtual void setOpacity(float opacity);
+	virtual float getOpacity();
+
+	virtual void setLightPosition(Vec3f position);
+	virtual Vec3f getLightPosition();
 };

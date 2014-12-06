@@ -17,6 +17,14 @@
 #include "WaveModel.h"
 #include "ParticuleInTheWindManager.h"
 
+
+#define PARAM_NB_PARTICULES		800
+#define PARAM_EMITTER_RADIUS	90.f
+#define PARAM_FORCE_FACTOR      0.005f
+#define PARAM_WAVE_NB_ROWS		64
+#define PARAM_WAVE_GAP			7
+
+
 #define SCREENSAVER_MODE
 #ifdef SCREENSAVER_MODE
 #define APP_CLASS_TYPE AppScreenSaver
@@ -56,7 +64,9 @@ private:
 	  ShaderFresnel mFresnelShader;
 
 	  // Particule manager
-	  ParticuleInTheWindManager mParticuleInTheWindManager;
+	  Particule::SPHERE mEmitter; // default emitter
+	  ParticuleInTheWindManager & mParticuleInTheWindManager = ParticuleInTheWindManager(mEmitter);;
+	  
 };
 
 //////////////////////////////////////////////
@@ -81,8 +91,8 @@ void CristalWaveApp::setup()
 			y = 0.0f;
 
 	/////////////////////////////////////////////////
-	int numRows = 64;
-	int gap = 7 + getWindowWidth() / 2000;
+	int numRows = PARAM_WAVE_NB_ROWS;
+	int gap = PARAM_WAVE_GAP + getWindowWidth() / 2000;
 	int numLines = getWindowWidth() / gap + 1;
 	/////////////////////////////////////////////////
 
@@ -106,18 +116,18 @@ void CristalWaveApp::setup()
 
 	// --------------------------------------------------------
 	// Set Particule manager
-	int nbParticule = 1200;
-	
+	int nbParticule = PARAM_NB_PARTICULES;
+	mEmitter.radius = PARAM_EMITTER_RADIUS;
 
 	mParticuleInTheWindManager.attrPosition = Vec3f::zero();
-	mParticuleInTheWindManager.attrFactor = 0.01f; //0.0005f;
+	mParticuleInTheWindManager.attrFactor = PARAM_FORCE_FACTOR;
 
 	ParticuleManager::PARTICULE_LIFE particule_life;
 	particule_life.minTTL = 0.5f;
 	particule_life.maxTTL = 3.5f;
 	particule_life.minTTH = 1.0f;
 	particule_life.minTTH = 4.0f;
-	mParticuleInTheWindManager.init(nbParticule, particule_life, static_cast<float>(getWindowWidth()));
+	mParticuleInTheWindManager.init(nbParticule, particule_life, getWindowWidth());
 }
 
 void CristalWaveApp::update()
@@ -150,13 +160,14 @@ void CristalWaveApp::update()
 
 	// --------------------------------------------------------
 	// Update particules system
-	float boxSize = 80.0f;
 	int vId = static_cast<int>(randFloat(mWave.getNumRows() * 0.2f * mWave.getNumLines(), mWave.getNumRows() * 0.8f * mWave.getNumLines()));
 	Vec3f point = mWave.getVertices()[vId].position;
-	float centerX = point.x;
-	float centerY = point.y;
-	mParticuleInTheWindManager.spawnBox = Particule::BOX(-boxSize + centerX, boxSize + centerX, -boxSize * 1.3f + centerY, boxSize * 1.3f + centerY, -boxSize, boxSize);
-	mParticuleInTheWindManager.setRepulsion(true, Vec3f(centerX, centerY, 0.0f));
+	
+	// Move Particles Emitter
+	mEmitter.position = point;
+
+	// Update Particles manager parameters
+	mParticuleInTheWindManager.setRepulsion(true, Vec3f(point.x, point.y, 0.0f));
 	mParticuleInTheWindManager.setColor(topColor);
 	mParticuleInTheWindManager.update();
 }
@@ -190,7 +201,7 @@ void CristalWaveApp::draw()
 
 	// --------------------------------------------------------
 	// Draw particules
-	mParticuleInTheWindManager.draw();
+	mParticuleInTheWindManager.drawBatch();
 
 
 #ifdef SHOW_WAVE_TRACE

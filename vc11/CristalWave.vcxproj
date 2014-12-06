@@ -63,7 +63,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\..\..\..\Archives\Dev\Cinder\cinder_0.8.5_vc2012\include";..\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"..\..\..\..\..\Archives\Dev\Cinder\cinder_0.8.5_vc2012\include";..\include;..\..\..\..\..\Archives\Dev\Cinder\Cinder-dev\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cinder_d.lib;%(AdditionalDependencies);scrnsavw.lib;comctl32.lib</AdditionalDependencies>
@@ -94,7 +94,7 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>"..\..\..\..\..\Archives\Dev\Cinder\cinder_0.8.5_vc2012\include";..\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>"..\..\..\..\..\Archives\Dev\Cinder\cinder_0.8.5_vc2012\include";..\include;..\..\..\..\..\Archives\Dev\Cinder\Cinder-dev\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cinder.lib;%(AdditionalDependencies);scrnsavw.lib;comctl32.lib</AdditionalDependencies>

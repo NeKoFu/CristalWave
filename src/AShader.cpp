@@ -39,18 +39,39 @@ void AShader::setAmbiantColor(Color c){
 	mColorAmbient = c;
 }
 
+Color AShader::getAmbiantColor(){
+	return mColorAmbient;
+}
+
 void AShader::setDiffuseColor(Color c){
 	mColorDiffuse = c;
+}
+
+Color AShader::getDiffuseColor(){
+	return mColorDiffuse;
 }
 
 void AShader::setSpecularColor(Color c){
 	mColorSpecular = c;
 }
 
+Color AShader::getSpecularColor(){
+	return mColorSpecular;
+}
+
 void AShader::setOpacity(float opacity){
 	mOpacity = opacity;
+}
+
+float AShader::getOpacity(){
+	return mOpacity;
 }
 
 void AShader::setLightPosition(Vec3f position){
 	mLightPosition = position;
 }
+
+Vec3f AShader::getLightPosition(){
+	return mLightPosition;
+}
+

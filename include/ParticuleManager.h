@@ -27,7 +27,7 @@ protected:
 
 	Vec3f computeAttractorForce(Vec3f position);
 	Vec3f computeRepulsionForce(Vec3f position);
-	virtual void computeParticuleLife(Particule * particule, float elapsedSeconds);
+	virtual void computeParticuleLife(Particule & particule, float elapsedSeconds);
 
 public:
 	Vec3f attrPosition
@@ -37,12 +37,12 @@ public:
 		, repulsionRadius;
 	
 	PARTICULE_LIFE life;
-	Particule::BOX spawnBox;
+	Particule::ISPRAY & spray;
 
-	ParticuleManager();
+	ParticuleManager(Particule::ISPRAY & emitter);
 	~ParticuleManager();
 
-	virtual void init(int nbParticule, PARTICULE_LIFE lifeParameters, Particule::BOX spawnBox);
+	virtual void init(const int nbParticule, PARTICULE_LIFE lifeParameters);
 	virtual void update();
 	virtual void draw();
 

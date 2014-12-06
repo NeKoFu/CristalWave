@@ -11,12 +11,6 @@ I wrote this project with Visual Studio 2013 and used the wonderfull library [Ci
 
 Copy [CristalWave.sCr](https://github.com/NeKoFu/CristalWave/blob/master/vc11/Release/CristalWave.sCr?raw=true) to your windows directory (or any directory you want) then right click on it and choose **Install**.
 
-## Todo
-
-* Add particles glow
-* Add Depth of Field post process
-* Add settings window
-
 ## Credits
 
 * [David Roume](http://www.mime-com.org/neko)

@@ -1,18 +1,19 @@
 #include "Particule.h"
 
-Particule::Particule(const Particule::BOX playBox, float radius, float mass, float drag){
-	_playBox = playBox;
-	_radius = radius;
-	_scale = 1.0f;
-	_mass = (mass > 0.00001f || mass < -0.00001f) ? mass : 1.0f;
-	_drag = drag;
-	_ttl = 0.0f;
-	_tth = 0.0f;
-	_forces = Vec3f::zero();
-	_opacity = 0.0f;
-	_color = Color(1.0f, 1.0f, 1.0f);
-	_ttoffset = randFloat(0.0f, 10.0f);
-	status = Particule::STATE::NONE;
+Particule::Particule(Particule::ISPRAY & spray, float radius, float mass, float drag)
+	: _spray(spray)
+	, _radius(radius)
+	, _scale(1.0f)
+	, _mass((mass > 0.00001f || mass < -0.00001f) ? mass : 1.0f)
+	, _drag(drag)
+	, _ttl(0.0f)
+	, _tth(0.0f)
+	, _forces(Vec3f::zero())
+	, _opacity(0.0f)
+	, _color(Color(1.0f, 1.0f, 1.0f))
+	, _ttoffset(randFloat(0.0f, 10.0f))
+	, status(Particule::STATE::NONE)
+{	
 	newRandomPosition();
 }
 
@@ -28,8 +29,6 @@ void Particule::draw(){
 	if (_opacity > 0.0f)
 	{
 		setMaterial();
-
-		//gl::drawSolidCircle(Vec2f(_currentPosition.x, _currentPosition.y), _radius);
 		gl::drawSolidRect(Rectf(_currentPosition.x - radius, _currentPosition.y - radius
 								, _currentPosition.x + radius, _currentPosition.y + radius));
 	}

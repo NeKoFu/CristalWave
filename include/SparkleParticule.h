@@ -13,7 +13,7 @@ class SparkleParticule : public Particule
 	SparkleShader &_shader;
 
 public:
-	SparkleParticule(const BOX playBox, float radius, float mass, float drag, SparkleShader &shader);
+	SparkleParticule(ISPRAY & spray, float radius, float mass, float drag, SparkleShader &shader);
 
 	virtual inline void setOpacity(float opacity){
 		opacity /= _scale * 4;
@@ -27,6 +27,14 @@ public:
 
 	virtual inline void setScale(float scale) {
 		_scale = randFloat(scale, scale * 1.5f);
+	}
+
+	inline int getSprite(){
+		return _sprite;
+	}
+
+	inline float getAdditiveFactor(){
+		return _nbAdditiveFactor;
 	}
 
 protected:

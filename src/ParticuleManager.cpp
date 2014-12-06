@@ -3,9 +3,10 @@
 #include "ParticuleManager.h"
 
 
-ParticuleManager::ParticuleManager(){
-	repulsionActivated = false;
-}
+ParticuleManager::ParticuleManager(Particule::ISPRAY & emitter)
+: repulsionActivated(false)
+, spray(emitter){}
+
 
 ParticuleManager::~ParticuleManager(){
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
@@ -30,7 +31,7 @@ Vec3f ParticuleManager::computeRepulsionForce(Vec3f position){
 	return repulsionForce * repulsionFactor;
 }
 
-void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE lifeParameters, Particule::BOX spawnBox){
+void ParticuleManager::init(const int nbParticule, ParticuleManager::PARTICULE_LIFE lifeParameters){
 
 	life = lifeParameters;
 
@@ -39,40 +40,40 @@ void ParticuleManager::init(int nbParticule, ParticuleManager::PARTICULE_LIFE li
 		float radius = randFloat(0.5f, randFloat(0.8f, randFloat(1.2f, randFloat(1.6f, randFloat(5.0f, 12.0f)))));
 		float mass = randFloat(30.0f, 100.0f);
 		float drag = 1.0f;
-		Particule* particule = new Particule(spawnBox, radius, mass, drag);
+		Particule* particule = new Particule(spray, radius, mass, drag);
 		addParticule(particule);
 	}
 }
 
-void ParticuleManager::computeParticuleLife(Particule * particule, float elapsedSeconds){
+void ParticuleManager::computeParticuleLife(Particule & particule, float elapsedSeconds){
 	float ttl = 0.0f, tth = 0.0f;
 	float opacity = 0.0f;
 
-	if (particule->getTimeToHide() > elapsedSeconds){
-		if (particule->getTimeToLive() > elapsedSeconds){
+	if (particule.getTimeToHide() > elapsedSeconds){
+		if (particule.getTimeToLive() > elapsedSeconds){
 
-			particule->status = Particule::STATE::LIVE;
+			particule.status = Particule::STATE::LIVE;
 			opacity = (
-				static_cast<float>(sin((elapsedSeconds + particule->getTimeOffset()) * 8.0f
-					+ static_cast<float>(sin(elapsedSeconds * 0.25f + particule->getTimeOffset()))
+				static_cast<float>(sin((elapsedSeconds + particule.getTimeOffset()) * 8.0f
+					+ static_cast<float>(sin(elapsedSeconds * 0.25f + particule.getTimeOffset()))
 				))
 				* 0.5f + 0.5f) * 0.75f;
 			opacity = opacity * opacity * (3 - 2 * opacity) * 0.75f;
-			particule->setOpacity(opacity);
+			particule.setOpacity(opacity);
 		}
 		else{
-			particule->status = Particule::STATE::HIDDEN;
-			particule->setOpacity(particule->getOpacity() - elapsedSeconds * 0.025f);
+			particule.status = Particule::STATE::HIDDEN;
+			particule.setOpacity(particule.getOpacity() - elapsedSeconds * 0.025f);
 		}
 	}
 	else{
-		ttl = (Particule::STATE::NONE != particule->status) ? static_cast<float>(app::getElapsedSeconds()) + randFloat(life.minTTL, life.maxTTL) : 0.0f;
+		ttl = (Particule::STATE::NONE != particule.status) ? static_cast<float>(app::getElapsedSeconds()) + randFloat(life.minTTL, life.maxTTL) : 0.0f;
 		tth = ttl + randFloat(life.minTTH, life.maxTTH);
 
-		particule->status = Particule::STATE::HIDDEN;
-		particule->setTimeToLive(ttl);
-		particule->setTimeToHide(tth);
-		particule->newRandomPosition(spawnBox);
+		particule.status = Particule::STATE::HIDDEN;
+		particule.setTimeToLive(ttl);
+		particule.setTimeToHide(tth);
+		particule.newRandomPosition();
 	}
 }
 
@@ -83,7 +84,7 @@ void ParticuleManager::update(){
 
 	for (vector<Particule*>::iterator it = _particuleList.begin(); it != _particuleList.end(); it++){
 		
-		computeParticuleLife(*it, elapsedSeconds);
+		computeParticuleLife(*(*it), elapsedSeconds);
 
 		if (repulsionActivated)
 		{

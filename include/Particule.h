@@ -11,25 +11,97 @@ using namespace std;
 class Particule
 {
 public:
-	enum STATE{
-		NONE
-		, LIVE
-		, HIDDEN
+	struct EMITTER{
+		enum EMITTER_TYPE{
+			NONE
+			, SPHERE
+			, BOX
+		};
 	};
 
-	STATE status;
+	struct STATE{
+		enum STATE_TYPE{
+			NONE
+			, LIVE
+			, HIDDEN
+		};
+	};
 
-	struct BOX{
+	STATE::STATE_TYPE status;
+
+	
+
+	struct ISPRAY{
+	public:
+		Vec3f position;
+		EMITTER::EMITTER_TYPE type = EMITTER::NONE;
+		virtual bool isInside(Vec3f p) const = 0;
+		virtual Vec3f randomPoint() const = 0;
+	};
+
+	struct SPHERE : ISPRAY{
+	public:
+		float radius;
+		const EMITTER::EMITTER_TYPE type = EMITTER::SPHERE;
+
+		SPHERE(Vec3f p = { 0.0f, 0.0f, 0.0f }, float r = 1.0f) {
+			position = p;
+			radius = r;
+		};
+
+		inline bool isInside(Vec3f p) const{
+			return (position.dot(p) < radius);
+		}
+
+		inline Vec3f randomPoint() const{
+			float radiusSquare = radius * radius;
+			float x = randFloat(-radius, radius);
+			float yLimit = sqrt(radiusSquare - x * x);
+			float y = randFloat(-yLimit, yLimit);
+			float zLimit = sqrt(yLimit * yLimit - y * y);
+			float z = randFloat(-zLimit, zLimit);
+			return Vec3f(x + position.x, y + position.y, z + position.z);
+		};
+	};
+
+	struct BOX : ISPRAY{
 	public:
 		float x1, x2, y1, y2, z1, z2;
+		const EMITTER::EMITTER_TYPE type = EMITTER::BOX;
 		
-		BOX(float xLeft = 0.0f, float xRight = 0.0f, float yLeft = 0.0f, float yRight = 0.0f, float zLeft = 0.0f, float zRight = 0.0f) {
+		BOX(Vec3f p = { 0.0f, 0.0f, 0.0f }, float width = 1.0f, float height = 1.0f, float depth = 1.0f) {
+			position = p;
+			x1 = p.x - width * 0.5f;
+			x2 = p.x + width * 0.5f;
+			y1 = p.y - height * 0.5f;
+			y2 = p.y - height * 0.5f;
+			z1 = p.z - depth * 0.5f;
+			z2 = p.z - depth * 0.5f;
+		};
+
+		BOX(float xLeft, float xRight, float yLeft, float yRight, float zLeft, float zRight) {
 			x1 = xLeft;
 			x2 = xRight;
 			y1 = yLeft;
 			y2 = yRight;
 			z1 = zLeft;
 			z2 = zRight;
+			position = Vec3f((x1 + x2) * 0.5f
+						, (y1 + y2) * 0.5f
+						, (z1 + z2) * 0.5f);
+		};
+
+		inline bool isInside(Vec3f p) const{
+			return (x1 < p.x && x2 > p.x
+				&&  y1 < p.y && y2 > p.y
+				&&  z1 < p.z && z2 > p.z);
+		}
+
+		inline Vec3f randomPoint() const{
+			float x = randFloat(x1, x2);
+			float y = randFloat(y1, y2);
+			float z = randFloat(z1, z2);
+			return Vec3f(x + position.x, y + position.y, z + position.z);
 		};
 	};
 
@@ -38,7 +110,7 @@ protected:
 		, _previousPosition
 		, _forces;
 
-	BOX _playBox;
+	ISPRAY & _spray;
 	
 	float _radius
 		, _scale
@@ -53,7 +125,7 @@ protected:
 
 public:
 
-	Particule(const BOX playBox, float radius, float mass, float drag);
+	Particule(ISPRAY & spray, float radius, float mass, float drag);
 
 	void update();
 	void draw();
@@ -74,8 +146,12 @@ public:
 		_scale = scale;
 	}
 
-	virtual inline void setEmitterBox(BOX box){
-		_playBox = box;
+	//virtual inline void setEmitter(const ISPRAY & spray){
+	//	_spray = spray;
+	//}
+
+	virtual inline const ISPRAY & getEmitter(){
+		return _spray;
 	}
 
 	virtual inline Vec3f getPosition(){
@@ -127,16 +203,8 @@ public:
 		return _ttoffset;
 	}
 
-	virtual inline void newRandomPosition(BOX box){
-		_playBox = box;
-		newRandomPosition();
-	}
-
 	virtual inline void newRandomPosition(){
-		float x = randFloat(_playBox.x1, _playBox.x2);
-		float y = randFloat(_playBox.y1, _playBox.y2);
-		float z = randFloat(_playBox.z1, _playBox.z2);
-		_currentPosition = Vec3f(x, y, z);
+		_currentPosition = _spray.randomPoint();
 		_previousPosition = _currentPosition;
 	};
 

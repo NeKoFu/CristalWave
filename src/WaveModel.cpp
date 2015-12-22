@@ -69,7 +69,7 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 		for (int j = 0; j < mNumLines; j++){
 			idVertice = i * mNumLines + j;
 			x = (float)j * mGap - (mNumLines * 0.5f * mGap) + mGap * 0.5f;
-			z = (float)i * mGap - mNumRows * mGap;
+			z = (float)i * mGap * 2 - mNumRows * mGap * 2;
 			y = 0.0f;
 			mpWave[idVertice].position = Vec3f(x, y, z);
 			mpWave[idVertice].color = color;

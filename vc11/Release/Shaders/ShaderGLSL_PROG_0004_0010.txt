@@ -1,0 +1,78 @@
+
+//== PROGRAM LINK STATUS = TRUE
+//== PROGRAM VALIDATE STATUS = FALSE
+
+//======================================================
+//   Vertex Shader 5 
+//======================================================
+
+//== SHADER COMPILE STATUS = TRUE
+// Sparkle Particle Vertex
+///////////////////////////////////////////
+#version 330
+
+uniform mat4 projectionModelViewMatrix;
+
+// attributes
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec4 spriteColor;
+layout (location = 2) in int spriteId; // sprite id (offset texture coordinate)
+layout (location = 3) in float particleRadius;
+layout (location = 4) in float additiveFactor;
+
+out vec4 vColor;
+out float vSpriteId; // link to fragment
+out float vAdditiveFactor;
+
+
+
+// pass texture coordinates
+void main(void)
+{
+    // fragment parameters
+    vSpriteId = float(spriteId);
+    vColor = spriteColor;
+    vAdditiveFactor = additiveFactor;
+
+    if(vColor.a > 0.0){
+
+        gl_Position = projectionModelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = particleRadius;// * 20.0;
+        //gl_PointSize = 80.0 * (1.0 + vSpriteId);
+    }
+    
+}
+
+//======================================================
+//   Fragment Shader 6
+//======================================================
+
+//== SHADER COMPILE STATUS = TRUE
+// Sparkle Particle Fragment
+///////////////////////////////////////////
+#version 330 core
+
+uniform sampler2D uTexture; // the texture 
+in vec4 vColor;
+in float vSpriteId; // sprite id (offset texture coordinate)
+in float vAdditiveFactor; // additive level
+
+out vec4 out_color;
+
+// ----------------------------------------
+void main() {
+
+  if(vColor.a > 0.0){
+
+	float textureOffset = 0.5 * vSpriteId;
+	vec2 texCoord = vec2(gl_PointCoord.x * 0.5 + textureOffset, gl_PointCoord.y);
+	//vec4 type = (vSpriteId > 0.5) ? vec4(0.0, 1.0, 0.0, 0.3) : vec4(1.0, 0.0, 0.0, 0.3);
+	////vec4 color = vec4(type.x, type.y, type.z, vColor.a);//  * vAdditiveFactor;
+	vec4 color = texture(uTexture, texCoord) * vColor * vAdditiveFactor;
+	
+	out_color = color;
+
+  }else
+  	discard;
+}
+

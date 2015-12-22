@@ -23,6 +23,12 @@ void ShaderFresnel::load() {
 
 void ShaderFresnel::pushUniform()
 {
+	Matrix44f projectionMatrix = gl::getProjection();
+	mShaderProgram.uniform("projectionMatrix", projectionMatrix);
+
+	Matrix44f modelViewMatrix = gl::getModelView();
+	mShaderProgram.uniform("modelViewMatrix", modelViewMatrix);
+
 	mShaderProgram.uniform("uK", mDiffuseK);
 	mShaderProgram.uniform("uRoughness", mRoughness);
 	mShaderProgram.uniform("uIoR", mIndexOfRefraction);

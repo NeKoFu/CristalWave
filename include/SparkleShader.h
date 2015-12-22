@@ -27,7 +27,7 @@ public:
 		}
 
 		~Attributes(){
-			if (positions != nullptr){
+			/*if (positions != nullptr){
 				delete[] positions;
 			}
 
@@ -45,7 +45,7 @@ public:
 
 			if (additiveFactors != nullptr){
 				delete[] additiveFactors;
-			}
+			}*/
 		}
 	};
 
@@ -70,4 +70,9 @@ private:
 	int mSpriteId;
 	Color mColor;
 	Attributes mAttributes;
+
+	const GLint spriteColorInShader = 1;
+	const GLint spriteIdInShader = 2;
+	const GLint particuleRadiusInShader = 3;
+	const GLint additiveFactorInShader = 4;
 };

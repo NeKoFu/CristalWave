@@ -5,7 +5,7 @@ SparkleParticule::SparkleParticule(Particule::ISPRAY & spray, float radius, floa
 
 	float limiter = 1.0f;
 
-	//_nbAdditiveFactor = randFloat(1, 18) * randFloat(1, 4) / radius;
+	//_nbAdditiveFactor = randFloat(1, 18) * randFloat(1, 5) / radius;
 	_nbAdditiveFactor = randFloat(5 / radius, 10);
 	
 	if (radius > 3) {

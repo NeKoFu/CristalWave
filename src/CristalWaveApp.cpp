@@ -21,11 +21,12 @@
 #define PARAM_NB_PARTICULES		800
 #define PARAM_EMITTER_RADIUS	90.f
 #define PARAM_FORCE_FACTOR      0.005f
-#define PARAM_WAVE_NB_ROWS		64
+#define PARAM_WAVE_NB_ROWS		96
 #define PARAM_WAVE_GAP			7
 
-
+#ifndef _DEBUG
 #define SCREENSAVER_MODE
+#endif
 #ifdef SCREENSAVER_MODE
 #define APP_CLASS_TYPE AppScreenSaver
 #else
@@ -38,6 +39,10 @@ using namespace std;
 
 class CristalWaveApp : public APP_CLASS_TYPE {
   public:
+	CristalWaveApp()
+		:mParticuleInTheWindManager(ParticuleInTheWindManager(mEmitter))
+	{
+	}
 	virtual void prepareSettings(Settings *settings);
 	virtual void setup();
 	virtual void update();
@@ -65,12 +70,12 @@ private:
 
 	  // Particule manager
 	  Particule::SPHERE mEmitter; // default emitter
-	  ParticuleInTheWindManager & mParticuleInTheWindManager = ParticuleInTheWindManager(mEmitter);;
+	  ParticuleInTheWindManager mParticuleInTheWindManager;
 	  
 };
 
 //////////////////////////////////////////////
-// Prepare Window settings for Cinder application
+// Prepare Window settings for Cinder application 
 void CristalWaveApp::prepareSettings(Settings *settings){
 	APP_CLASS_TYPE::prepareSettings(settings);
 #ifdef SCREENSAVER_MODE
@@ -104,6 +109,7 @@ void CristalWaveApp::setup()
 
 	// Init Wave Model
 	mWave.setup(getWindowWidth(), getWindowHeight(), numRows, numLines, -mOffsetCameratH);
+	//mWave.setup(getWindowWidth(), getWindowHeight() / 2, 10, 5, -500);
 
 	// set a random offset
 	Rand rnd;
@@ -111,8 +117,9 @@ void CristalWaveApp::setup()
 	mOffsetTime = rnd.nextFloat(0.0f, 100.0f);
 
 	// Set the Shader program
+	mFresnelShader.load();
 	mpWaveShader = &mFresnelShader;
-	mpWaveShader->load();
+	mWave.setShader(mpWaveShader);
 
 	// --------------------------------------------------------
 	// Set Particule manager
@@ -174,6 +181,8 @@ void CristalWaveApp::update()
 
 void CristalWaveApp::draw()
 {
+	//glClear(GL_COLOR_BUFFER_BIT); // A virer
+	
 	// --------------------------------------------------------
 	// Set Camera for background
 	setCameraOrtho(Vec3f(0, 0, 500.0f));
@@ -181,23 +190,19 @@ void CristalWaveApp::draw()
 
 	// Draw Background
 	mBackground.draw();
+	
 
 	// --------------------------------------------------------
 	// Set Camera for wave
 	setCameraOrtho(Vec3f(0, 140, 1000.0f));
 	gl::setMatrices(mCamera);
 
-	// Bind Wave Shader
-	mpWaveShader->bind();
-	mpWaveShader->pushUniform();
 
 	// --------------------------------------------------------
 	// Draw Wave
 	mWave.draw();
+	//gl::drawColorCube(Vec3f(0, 0, 0), Vec3f(50, 50, 50));
 
-	// --------------------------------------------------------
-	// UnBind Wave Shader
-	mpWaveShader->unbind();
 
 	// --------------------------------------------------------
 	// Draw particules

@@ -17,7 +17,7 @@ void ParticuleInTheWindManager::init(const int nbParticule, PARTICULE_LIFE lifeP
 	life = lifeParameters;
 	for (int i = 0; i < nbParticule; i++){
 
-		float radius = randFloat(1.0f, randFloat(1.2f, randFloat(1.6f, randFloat(2.0f, randFloat(4.0f, 64.0f)))));
+		float radius = randFloat(1.0f, randFloat(1.1f, randFloat(1.5f, randFloat(1.8f, randFloat(4.0f, 128.0f)))));
 		float mass = randFloat(80.0f, 250.0f);
 		float drag = 1.0f;
 		SparkleParticule* particule = new SparkleParticule(spray, radius, mass, drag, _shader);
@@ -38,7 +38,7 @@ void ParticuleInTheWindManager::update(){
 	Vec3f oscilation = Vec3f(sin(elapsedSeconds * 0.3f) * 0.88f, sin(elapsedSeconds * 0.3f) * 0.24f, 0.0f);
 	Vec3f attrForce;
 	Vec3f force;
-	Color spriteColor = _shader.getAmbiantColor();
+	Color spriteColor = _shader.getAmbiantColor() + Color(0.5, 0.5, 0.5);
 
 	// batch each particles
 	int i = 0;
@@ -59,12 +59,11 @@ void ParticuleInTheWindManager::update(){
 		(*it)->addForces(oscilation);
 		(*it)->update();
 
-
 		// Point sprites parameters
 		_shaderAttributes.positions[i] = (*it)->getPosition();
-		_shaderAttributes.colors[i].x = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.r : 0.0; // color
-		_shaderAttributes.colors[i].y = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.g : 0.0; // color
-		_shaderAttributes.colors[i].z = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.b : 0.0; // color
+		_shaderAttributes.colors[i].x = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.r : 0.0f; // color R
+		_shaderAttributes.colors[i].y = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.g : 0.0f; // color G
+		_shaderAttributes.colors[i].z = ((*it)->status != Particule::STATE::HIDDEN) ? spriteColor.b : 0.0f; // color B
 		_shaderAttributes.colors[i].w = (*it)->getOpacity() * 2.0f; // opacity
 		_shaderAttributes.spriteIDs[i] = ((SparkleParticule*)*it)->getSprite(); // spriteID
 		_shaderAttributes.radius[i] = (*it)->getRadius() * (*it)->getScale(); // size
@@ -93,8 +92,9 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule & particul
 
 			// set smooth scale down at start
 			float scale = 1.0f;
-			if (elapsedSeconds <= 5.0){
-				scale = (5.0f - elapsedSeconds) * 0.2f;
+			float maxDelay = 5.0f;
+			if (elapsedSeconds <= maxDelay){
+				scale = (maxDelay - elapsedSeconds) * 0.2f;
 				if (scale <= 0.0f)
 				{
 					scale = 1.0f;
@@ -102,7 +102,7 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule & particul
 				else {
 					scale = scale * scale * (3 - 2 * scale);
 					opacity -= scale;
-					scale = scale * 24 + 1.0f;
+					scale = scale * 240 + 1.0f;
 				}
 			}
 
@@ -160,5 +160,4 @@ void ParticuleInTheWindManager::drawBatch(){
 	_shader.bind(_shaderAttributes);
 	glDrawArrays(GL_POINTS, 0, _particuleList.size());
 	_shader.unbind();
-
 }

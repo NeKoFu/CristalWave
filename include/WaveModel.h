@@ -14,6 +14,7 @@
 #include "cinder/CinderMath.h" 
 #include "cinder/gl/GlslProg.h"
 #include "Resources.h"
+#include "AShader.h"
 
 #include "Vertice.h"
 
@@ -51,11 +52,15 @@ private:
 	Vec3f * mpNormals;
 	ColorA* mpColors;
 	Vertice* mpWave;
-	unsigned short* mpVerticeIndexes;
+	unsigned int* mpVerticeIndexes;
 
 	Perlin mPerlin;
 
 	string mTrace;
+
+	GLuint mVBO[3];
+
+	AShader* mpShader;
 
 public:
 	WaveModel();
@@ -64,6 +69,12 @@ public:
 	void update(float elapsedTime, float speedFactor = 0);
 	void draw();
 	void writeInfo(Vec2f position);
+	
+	// Setter
+	inline void setShader(AShader* pshader){
+		mpShader = pshader;
+	}
+
 	// Getter
 	inline unsigned int getNbPoints(){
 		return mNbPoints;

@@ -25,6 +25,12 @@ WaveModel::~WaveModel()
 	if (mpColors != nullptr){ delete mpColors; }
 	if (mpWave != nullptr){ delete mpWave; }
 	if (mpVerticeIndexes != nullptr){ delete mpVerticeIndexes; }
+
+	// unbind buffers in graphic card
+	glBindVertexArray(0);
+
+	// Delete Vertex buffers
+	glDeleteBuffersARB(3, mVBO);
 }
 
 //////////////////////////////////////////////
@@ -46,7 +52,7 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 	mpNormals = new Vec3f[mNbPoints];
 	mpColors = new ColorA[mNbPoints];
 	mpWave = new Vertice[mNbPoints];
-	mpVerticeIndexes = new unsigned short[mNbIndexes];
+	mpVerticeIndexes = new unsigned int[mNbIndexes];
 
 	mOffsetH = offsetCameratH;
 	mWaveMotionLimit = (int)(offsetCameratH * 0.9f);
@@ -77,7 +83,8 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 
 	// Set Vertices Indexes
 	int k = 0;
-	mpVerticeIndexes = new unsigned short[(mNumRows - 1) * mNumLines * 2];
+	int nbVertices = (mNumRows - 1) * mNumLines * 2;
+	mpVerticeIndexes = new unsigned int[nbVertices];
 	for (int i = 0; i < mNumRows - 1; i++){
 		for (int j = 0; j < mNumLines; j++){
 
@@ -93,6 +100,9 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 			}
 		}	
 	}
+
+	// Allocate Vertex buffers
+	glGenBuffers(3, mVBO); // indexes, vertices, normals
 }
 
 //////////////////////////////////////////////
@@ -100,42 +110,58 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 void WaveModel::update(float elapsedTime, float speedFactor){
 
 	float speed = 3.8f + (speedFactor * speedFactor * (3 - 2 * speedFactor));
-	if (elapsedTime < 1)
-	{
-
-	}
-
 	computePositions(elapsedTime, speed);
 	computeNormals();
 }
 
 //////////////////////////////////////////////
 // Draw the wave
+/*void WaveModel::draw(){
+
+}
+*/
 void WaveModel::draw(){
 
+	// Bind Wave Shader
+	mpShader->bind();
+	mpShader->pushUniform();
+	
+	
+	// Push indexes to GPU Buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVBO[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mNbPoints * sizeof(mpVerticeIndexes), mpVerticeIndexes, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Push vertices
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, mNbPoints * 3 * sizeof(GLfloat), mpVertices, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	// Push normals
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO[2]);
+	glBufferData(GL_ARRAY_BUFFER, mNbPoints * 3 * sizeof(GLfloat), mpNormals, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+	/**/
+	// Activate
 	gl::enableAlphaBlending();
 
 	// Draw
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, mpVertices);
-	glNormalPointer(GL_FLOAT, 0, mpNormals);
+	//gl::enableWireframe();
+	glDrawElements(GL_TRIANGLE_STRIP, mNbPoints, GL_UNSIGNED_INT, NULL);
+	//gl::disableWireframe();
 
-	//-----------------------------
-#if 0
-	gl::enableWireframe();
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glDrawElements(GL_TRIANGLE_STRIP, mNbIndexes, GL_UNSIGNED_SHORT, mpVerticeIndexes);
-	gl::disableWireframe();
-#endif
-	//-----------------------------
-
-	glDrawElements(GL_TRIANGLE_STRIP, mNbIndexes, GL_UNSIGNED_SHORT, mpVerticeIndexes);
-
-	//glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_NORMAL_ARRAY);
-
+	// Disable and unbind
 	gl::disableAlphaBlending();
+	/**/
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	// UnBind Wave Shader
+	mpShader->unbind();
 }
 
 //////////////////////////////////////////////
@@ -167,7 +193,7 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 	float amplitude = mPerlin.noise(sinTimeHighAmplitude * 0.00225f, sinTimeHighAmplitude * 0.0001f);
 	amplitude = (160 + (60 * frequencyNoise)) + (elapsedTimeSlow * 54 * zNoiseSpeed) + mPerlin.noise(amplitude * mFrameCounter * 0.00225f, amplitude * elapsedTimeSlow * 0.1f, sinTimeHighAmplitude * 0.00025f) * zSpeed * frequency * 0.12f;
 
-	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * (sin(elapsedTime * 0.35 + 1) - cos(3 + elapsedTime * 0.25 + sin(elapsedTime) * 0.2f) * 2.3f);
+	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + elapsedTime * 0.25 + sin(elapsedTime) * 0.2f) * 2.3f);
 
 	float waveFirstAmplitude = 0.0f;
 	float waveSecondAmplitude = mOffsetH * 0.0035f; 

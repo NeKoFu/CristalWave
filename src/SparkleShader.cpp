@@ -25,25 +25,25 @@ void SparkleShader::bind(const Attributes & attributes)
 {
 	AShader::bind();
 	mAttributes = attributes;
-
 	mAttributes.texture.enableAndBind();
 
-	GLint particuleRadiusInShader = mShaderProgram.getAttribLocation("particleRadius");
-	GLint spriteIdInShader = mShaderProgram.getAttribLocation("spriteId");
-	GLint spriteColorInShader = mShaderProgram.getAttribLocation("spriteColor");
-	GLint additiveFactorInShader = mShaderProgram.getAttribLocation("additiveFactor");
-	
-	glEnableVertexAttribArray(particuleRadiusInShader);
-	glVertexAttribPointer(particuleRadiusInShader, 1, GL_FLOAT, false, 0, mAttributes.radius);
+	Matrix44f modelviewMatrix = gl::getModelView()
+		, projectionMatrix = gl::getProjection()
+		, projectionModelViewMatrix = projectionMatrix * modelviewMatrix;
 
-	glEnableVertexAttribArray(spriteIdInShader);
-	glVertexAttribPointer(spriteIdInShader, 1, GL_INT, false, 0, mAttributes.spriteIDs);
+	mShaderProgram.uniform("projectionModelViewMatrix", projectionModelViewMatrix);
+
 
 	glEnableVertexAttribArray(spriteColorInShader);
-	glVertexAttribPointer(spriteColorInShader, 4, GL_FLOAT, false, 0, mAttributes.colors);
-
+	glEnableVertexAttribArray(spriteIdInShader);
+	glEnableVertexAttribArray(particuleRadiusInShader);
 	glEnableVertexAttribArray(additiveFactorInShader);
+
+	glVertexAttribPointer(spriteColorInShader, 4, GL_FLOAT, true, 0, mAttributes.colors);
+	glVertexAttribIPointer(spriteIdInShader, 1, GL_INT, 0, mAttributes.spriteIDs);
+	glVertexAttribPointer(particuleRadiusInShader, 1, GL_FLOAT, false, 0, mAttributes.radius);
 	glVertexAttribPointer(additiveFactorInShader, 1, GL_FLOAT, false, 0, mAttributes.additiveFactors);
+
 
 	glEnable(GL_POINT_SPRITE);
 	glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
@@ -51,10 +51,6 @@ void SparkleShader::bind(const Attributes & attributes)
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, mAttributes.positions);
-
-	// TIME for DEBUG
-	//float elapsedTime = (float)ci::app::getElapsedSeconds() * 0.1f;
-	//mShaderProgram.uniform("uTime", elapsedTime);
 
 	gl::enableAdditiveBlending();
 }
@@ -71,7 +67,9 @@ void SparkleShader::unbind()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 
-	GLint particuleRadiusInShader = mShaderProgram.getAttribLocation("particleRadius");
+	glDisableVertexAttribArray(spriteColorInShader);
+	glDisableVertexAttribArray(spriteIdInShader);
 	glDisableVertexAttribArray(particuleRadiusInShader);
+	glDisableVertexAttribArray(additiveFactorInShader);
 	AShader::unbind();
 }

@@ -15,7 +15,6 @@ class ParticuleInTheWindManager : public ParticuleManager
 	Perlin _perlin;
 	int _screenWidth;
 	Timer _timer;
-	gl::Texture _texture;
 	SparkleShader _shader;
 	SparkleShader::Attributes _shaderAttributes;
 

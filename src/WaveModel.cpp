@@ -26,11 +26,8 @@ WaveModel::~WaveModel()
 	if (mpWave != nullptr){ delete mpWave; }
 	if (mpVerticeIndexes != nullptr){ delete mpVerticeIndexes; }
 
-	// unbind buffers in graphic card
-	glBindVertexArray(0);
-
 	// Delete Vertex buffers
-	glDeleteBuffersARB(3, mVBO);
+	glDeleteBuffers(3, mVBO);
 }
 
 //////////////////////////////////////////////

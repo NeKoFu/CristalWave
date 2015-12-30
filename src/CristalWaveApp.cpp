@@ -87,6 +87,7 @@ void CristalWaveApp::prepareSettings(Settings *settings){
 	//settings->disableFrameRate();
 }
 
+
 void CristalWaveApp::setup()
 {
 	float sizeW = getWindowWidth() * 0.5f;
@@ -201,7 +202,6 @@ void CristalWaveApp::draw()
 	// --------------------------------------------------------
 	// Draw Wave
 	mWave.draw();
-	//gl::drawColorCube(Vec3f(0, 0, 0), Vec3f(50, 50, 50));
 
 
 	// --------------------------------------------------------

@@ -2,7 +2,7 @@ Cristal Wave
 ============
 #### Windows Screensaver ####
 
-This is a screensaver for Windows highly inspirated by Sony XWave background for PS3.
+This is a screensaver for Windows highly inspired by Sony XWave background for PS3.
 I wrote this project with Visual Studio 2013 and used the wonderfull library [Cinder](http://libcinder.org/).
 
 ![screenshot](https://raw.github.com/NeKoFu/CristalWave/master/assets/screenshot.png)

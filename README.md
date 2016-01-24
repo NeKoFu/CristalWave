@@ -9,7 +9,9 @@ I wrote this project with Visual Studio 2013 and used the wonderfull library [Ci
 
 ## Installation
 
-Copy [CristalWave.sCr](https://github.com/NeKoFu/CristalWave/blob/master/vc11/Release/CristalWave.sCr?raw=true) to your windows directory (or any directory you want) then right click on it and choose **Install**.
+Copy [CristalWave.sCr](https://github.com/NeKoFu/CristalWave/blob/master/vc11/Release/CristalWave.sCr?raw=true) to your windows directory (or any directory you want) then right click on it and choose **Install** or double-clic on it to execute the screensaver.
+
+If an [UAC](https://en.wikipedia.org/wiki/User_Account_Control) prompt appear and warns you to not install this file. Just do a right click on CristalWave.scr, goes to **Properties** and check **Unlock**.​
 
 ## Credits
 

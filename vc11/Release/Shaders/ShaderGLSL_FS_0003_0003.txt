@@ -75,7 +75,7 @@ void main() {
   vec3 color = (ambient + diffuse + specular) + fresnel;
   vec3 alpha = specular * 0.5 + diffuse * 0.5;
   float alphaAttenuation = (N.y - 0.25 + N.z * uSpecularAttenuation * uTransluscence * -N.y * (fresnel + 0.15) * 0.025);
-  out_color = vec4( color * alphaAttenuation * alphaAttenuation, (alpha.r + alpha.g + alpha.b) * (0.333 * alphaAttenuation) );
+  out_color = vec4( color * alphaAttenuation * alphaAttenuation * 1.25, (alpha.r + alpha.g + alpha.b) * (0.333 * alphaAttenuation) );
 
   ///out_color = vec4( color, 1.0);
   /**/

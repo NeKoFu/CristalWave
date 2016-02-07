@@ -19,10 +19,10 @@
 
 
 #define PARAM_NB_PARTICULES		800
-#define PARAM_EMITTER_RADIUS	90.f
+#define PARAM_EMITTER_RADIUS	80.f
 #define PARAM_FORCE_FACTOR      0.005f
-#define PARAM_WAVE_NB_ROWS		100
-#define PARAM_WAVE_GAP			2
+#define PARAM_WAVE_NB_ROWS		80
+#define PARAM_WAVE_GAP			4
 
 #ifndef _DEBUG
 #define SCREENSAVER_MODE
@@ -47,6 +47,7 @@ class CristalWaveApp : public APP_CLASS_TYPE {
 	virtual void setup();
 	virtual void update();
 	virtual void draw();
+	virtual void shutdown();
 
 private:
 	void fadeLayer(float opacity);
@@ -136,6 +137,10 @@ void CristalWaveApp::setup()
 	particule_life.minTTH = 1.0f;
 	particule_life.minTTH = 4.0f;
 	mParticuleInTheWindManager.init(nbParticule, particule_life, getWindowWidth());
+}
+
+void CristalWaveApp::shutdown() {
+	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void CristalWaveApp::update()

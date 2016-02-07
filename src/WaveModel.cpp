@@ -26,6 +26,12 @@ WaveModel::~WaveModel()
 	if (mpWave != nullptr){ delete mpWave; }
 	if (mpVerticeIndexes != nullptr){ delete mpVerticeIndexes; }
 
+	// clean GL State
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	// Delete Vertex buffers
 	glDeleteBuffers(3, mVBO);
 }
@@ -66,7 +72,7 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 		for (int j = 0; j < mNumLines; j++){
 			idVertice = i * mNumLines + j;
 			x = (float)j * mGap - (mNumLines * 0.5f * mGap) + mGap * 0.5f;
-			z = (float)i * mGap * 2 - mNumRows * mGap * 2;
+			z = ((float)i * mGap - mNumRows * mGap) * 2;
 			y = 0.0f;
 			mpWave[idVertice].position = Vec3f(x, y, z);
 			mpWave[idVertice].color = color;
@@ -113,10 +119,6 @@ void WaveModel::update(float elapsedTime, float speedFactor){
 
 //////////////////////////////////////////////
 // Draw the wave
-/*void WaveModel::draw(){
-
-}
-*/
 void WaveModel::draw(){
 
 	// Bind Wave Shader
@@ -145,9 +147,9 @@ void WaveModel::draw(){
 	gl::enableAlphaBlending();
 
 	// Draw
-	//gl::enableWireframe();
+	///gl::enableWireframe();
 	glDrawElements(GL_TRIANGLE_STRIP, mNbPoints, GL_UNSIGNED_INT, NULL);
-	//gl::disableWireframe();
+	///gl::disableWireframe();
 
 	// Disable and unbind
 	gl::disableAlphaBlending();

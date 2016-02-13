@@ -72,7 +72,7 @@ void WaveModel::setup(int windowWidth, int windowHeight, int numRows, int numLin
 		for (int j = 0; j < mNumLines; j++){
 			idVertice = i * mNumLines + j;
 			x = (float)j * mGap - (mNumLines * 0.5f * mGap) + mGap * 0.5f;
-			z = ((float)i * mGap - mNumRows * mGap) * 2;
+			z = ((float)i * mGap - mNumRows * mGap) * 3;
 			y = 0.0f;
 			mpWave[idVertice].position = Vec3f(x, y, z);
 			mpWave[idVertice].color = color;
@@ -190,9 +190,9 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 	float frequencyNoise = mPerlin.noise(mFrameCounter * 0.0025f, elapsedTimeSlow);
 	float frequency = (0.001f + (0.000028f * sinTimeSlow)) + (elapsedTimeSlow * 0.00008f) + frequencyNoise * 0.00004f;
 	float amplitude = mPerlin.noise(sinTimeHighAmplitude * 0.00225f, sinTimeHighAmplitude * 0.0001f);
-	amplitude = (160 + (60 * frequencyNoise)) + (elapsedTimeSlow * 54 * zNoiseSpeed) + mPerlin.noise(amplitude * mFrameCounter * 0.00225f, amplitude * elapsedTimeSlow * 0.1f, sinTimeHighAmplitude * 0.00025f) * zSpeed * frequency * 0.12f;
+	amplitude = (160 + (60 * frequencyNoise)) + (elapsedTimeSlow * 54 * zNoiseSpeed) + mPerlin.noise(amplitude * mFrameCounter * 0.00225f, amplitude * elapsedTimeSlow * 0.2f, sinTimeHighAmplitude * 0.00025f) * zSpeed * frequency * 0.14f;
 
-	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + elapsedTime * 0.25 + sin(elapsedTime) * 0.2f) * 2.3f);
+	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + (elapsedTime + sin(elapsedTime)) * 0.25f) * 2.3f);
 
 	float waveFirstAmplitude = 0.0f;
 	float waveSecondAmplitude = mOffsetH * 0.0035f; 

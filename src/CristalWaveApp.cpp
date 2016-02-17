@@ -247,7 +247,7 @@ void CristalWaveApp::fadeLayer(float opacity){
 
 // Set Camera
 void CristalWaveApp::setCameraOrtho(Vec3f eye, bool reverse){
-	Vec3f center = Vec3f(0.0f, 0.0f, -300.0f);
+	Vec3f center = Vec3f(0.0f, 0.0f, -100.0f);
 	float sizeW = getWindowWidth() * 0.5f;
 	float sizeH = getWindowHeight() * 0.5f;
 	if (reverse)

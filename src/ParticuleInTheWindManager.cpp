@@ -119,8 +119,8 @@ void ParticuleInTheWindManager::computeParticuleLife(SparkleParticule & particul
 	else if (static_cast<float>(_timer.getSeconds()) < 0.5f) {
 		float limit = 5 / particule.getRadius();
 		limit *= limit * limit;
-		float leftLimit = (-_screenWidth * 0.45f) + _screenWidth * limit;
-		float rightLimit = (_screenWidth * 0.45f) - _screenWidth * limit;
+		float leftLimit = (-_screenWidth * 0.40f) + _screenWidth * limit;
+		float rightLimit = (_screenWidth * 0.40f) - _screenWidth * limit;
 
 		if (particule.getRadius() < 3.0f
 			|| spray.position.x < leftLimit
@@ -142,6 +142,7 @@ void ParticuleInTheWindManager::draw(){
 	_shaderAttributes.texture.enableAndBind();
 	_shader.bind();
 
+	glEnable(0x8642);
 	gl::enableAdditiveBlending();
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -153,6 +154,7 @@ void ParticuleInTheWindManager::draw(){
 	gl::enableAlphaBlending(false);
 	_shader.unbind();
 	_shaderAttributes.texture.disable();
+	glDisable(0x8642);
 
 }
 

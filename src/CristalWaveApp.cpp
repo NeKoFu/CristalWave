@@ -21,8 +21,8 @@
 #define PARAM_NB_PARTICULES		800
 #define PARAM_EMITTER_RADIUS	80.f
 #define PARAM_FORCE_FACTOR      0.005f
-#define PARAM_WAVE_NB_ROWS		64
-#define PARAM_WAVE_GAP			3
+#define PARAM_WAVE_NB_ROWS		100
+#define PARAM_WAVE_GAP			2
 
 #ifndef _DEBUG
 #define SCREENSAVER_MODE
@@ -56,6 +56,7 @@ private:
   protected:
 	  float mOpacity;
 	  float mOffsetTime;
+	  float mCameraAltitude;
 	  int mOffsetCameratH;
 
 	  WaveModel mWave;
@@ -183,6 +184,9 @@ void CristalWaveApp::update()
 	mParticuleInTheWindManager.setRepulsion(true, Vec3f(point.x, point.y, 0.0f));
 	mParticuleInTheWindManager.setColor(topColor);
 	mParticuleInTheWindManager.update();
+
+	// Move Camera
+	mCameraAltitude = cos(elapsedTime * 0.25f) * 300 + 200;
 }
 
 void CristalWaveApp::draw()
@@ -200,7 +204,8 @@ void CristalWaveApp::draw()
 
 	// --------------------------------------------------------
 	// Set Camera for wave
-	setCameraOrtho(Vec3f(0, 140, 1000.0f));
+	//setCameraOrtho(Vec3f(0, 140, 1000.0f));
+	setCameraOrtho(Vec3f(0, mCameraAltitude, 1000.0f));
 	gl::setMatrices(mCamera);
 
 
@@ -212,15 +217,6 @@ void CristalWaveApp::draw()
 	// --------------------------------------------------------
 	// Draw particules
 	mParticuleInTheWindManager.drawBatch();
-
-
-#ifdef SHOW_WAVE_TRACE
-	// --------------------------------------------------------
-	// Trace
-	setCameraOrtho(Vec3f(0, 140, 1000.0f), true);
-	gl::setMatrices(mCamera);
-	mWave.writeInfo(Vec2f(-getWindowWidth() * 0.5f + 50, getWindowHeight() * 0.5f - 270));
-#endif	
 
 	// --------------------------------------------------------
 	// Fade in effect
@@ -251,7 +247,7 @@ void CristalWaveApp::fadeLayer(float opacity){
 
 // Set Camera
 void CristalWaveApp::setCameraOrtho(Vec3f eye, bool reverse){
-	Vec3f center = Vec3f(0.0f, 0.0f, 0.0f);
+	Vec3f center = Vec3f(0.0f, 0.0f, -300.0f);
 	float sizeW = getWindowWidth() * 0.5f;
 	float sizeH = getWindowHeight() * 0.5f;
 	if (reverse)

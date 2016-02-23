@@ -112,7 +112,6 @@ void CristalWaveApp::setup()
 
 	// Init Wave Model
 	mWave.setup(getWindowWidth(), getWindowHeight(), numRows, numLines, -mOffsetCameratH);
-	//mWave.setup(getWindowWidth(), getWindowHeight() / 2, 10, 5, -500);
 
 	// set a random offset
 	Rand rnd;
@@ -142,6 +141,7 @@ void CristalWaveApp::setup()
 
 void CristalWaveApp::shutdown() {
 	glClear(GL_COLOR_BUFFER_BIT);
+	mWave.cleanup();
 }
 
 void CristalWaveApp::update()
@@ -170,7 +170,7 @@ void CristalWaveApp::update()
 
 	// --------------------------------------------------------
 	// Change light position
-	mpWaveShader->setLightPosition(Vec3f(0.0f, 10.0f, -7.0f + sin(elapsedTime) * 2));
+	mpWaveShader->setLightPosition(Vec3f(0.0f, 10.0f, -10.0f + sin(elapsedTime) * 2));
 
 	// --------------------------------------------------------
 	// Update particules system

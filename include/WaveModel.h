@@ -69,6 +69,7 @@ public:
 	void update(float elapsedTime, float speedFactor = 0);
 	void draw();
 	void writeInfo(Vec2f position);
+	void cleanup();
 	
 	// Setter
 	inline void setShader(AShader* pshader){

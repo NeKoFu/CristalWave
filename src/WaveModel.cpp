@@ -25,15 +25,6 @@ WaveModel::~WaveModel()
 	if (mpColors != nullptr){ delete mpColors; }
 	if (mpWave != nullptr){ delete mpWave; }
 	if (mpVerticeIndexes != nullptr){ delete mpVerticeIndexes; }
-
-	// clean GL State
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// Delete Vertex buffers
-	glDeleteBuffers(3, mVBO);
 }
 
 //////////////////////////////////////////////
@@ -178,18 +169,18 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 	
 	// Lot of waving parameters... 
 	speed += mPerlin.noise(mFrameCounter * 0.0002f, elapsedTime * 0.0002f) * 0.8f;
-	float elapsedTimeSlow = elapsedTime * 0.28f;
 	float sinTime = sin(elapsedTime);
+	float elapsedTimeSlow = elapsedTime * (0.35f + sinTime * 0.08f);
 	float sinTimeSlow = sin(elapsedTimeSlow - elapsedTime);
 	float sinTimeAmplitude = sin(elapsedTimeSlow * speed);
 	float sinTimeSlowSpeed = sinTimeSlow * speed;
-	float horizontaleSpeed = (float)elapsedTime * 200 * speed;
-	float zSpeed = elapsedTime * 100 * speed;
+	float horizontaleSpeed = (float)elapsedTime * 100 * speed;
+	float zSpeed = elapsedTime * 25 * speed;
 	float zNoiseSpeed = elapsedTime * (0.0015f * sin(elapsedTimeSlow)) * speed * 0.01f;
 	float sinTimeHighAmplitude = sinTime * (8 + 2 * sinTimeAmplitude);
 	float frequencyNoise = mPerlin.noise(mFrameCounter * 0.0025f, elapsedTimeSlow);
 	float frequency = (0.001f + (0.000028f * sinTimeSlow)) + (elapsedTimeSlow * 0.00008f) + frequencyNoise * 0.00004f;
-	float amplitude = mPerlin.noise(sinTimeHighAmplitude * 0.00125f, sinTimeHighAmplitude * 0.01f);
+	float amplitude = sinTimeSlow;// mPerlin.noise(sinTimeHighAmplitude * 0.00125f, sinTimeHighAmplitude * 0.01f);
 	amplitude = (160 + (60 * frequencyNoise)) + (elapsedTimeSlow * 54 * zNoiseSpeed) + mPerlin.noise(amplitude * mFrameCounter * 0.00225f, amplitude * elapsedTimeSlow * 0.2f, sinTimeHighAmplitude * 0.00025f) * zSpeed * frequency * 0.14f;
 
 	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + (elapsedTime + sin(elapsedTime)) * 0.25f) * 2.3f);
@@ -333,4 +324,23 @@ void WaveModel::writeInfo(Vec2f position){
 	trace += "------------------------------------------------\n";//mTrace
 	trace += "DEBUG INFORMATIONS: \n";
 	gl::drawString(trace, Vec2f(position.x, position.y));
+}
+
+
+//////////////////////////////////////////////
+// cleanup
+void WaveModel::cleanup() {
+
+	// Unbind Shader
+	mpShader->unbind();
+	glDisableClientState(GL_COLOR_ARRAY);
+
+	// clean GL State
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	// Delete Vertex buffers
+	glDeleteBuffers(3, mVBO);
 }

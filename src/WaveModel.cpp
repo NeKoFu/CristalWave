@@ -183,7 +183,7 @@ void WaveModel::computePositions(float elapsedTime, float speed){
 	float amplitude = sinTimeSlow;// mPerlin.noise(sinTimeHighAmplitude * 0.00125f, sinTimeHighAmplitude * 0.01f);
 	amplitude = (160 + (60 * frequencyNoise)) + (elapsedTimeSlow * 54 * zNoiseSpeed) + mPerlin.noise(amplitude * mFrameCounter * 0.00225f, amplitude * elapsedTimeSlow * 0.2f, sinTimeHighAmplitude * 0.00025f) * zSpeed * frequency * 0.14f;
 
-	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.0001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + (elapsedTime + sin(elapsedTime)) * 0.25f) * 2.3f);
+	float moveNoise = mPerlin.noise(elapsedTime, mFrameCounter * 0.001f) * static_cast<float>(sin(elapsedTime * 0.35 + 1) - cos(3 + (elapsedTime + sin(elapsedTime)) * 0.25f) * 2.3f);
 
 	float waveFirstAmplitude = 0.0f;
 	float waveSecondAmplitude = mOffsetH * 0.0035f; 
